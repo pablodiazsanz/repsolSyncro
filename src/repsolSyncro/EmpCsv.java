@@ -1,5 +1,8 @@
 package repsolSyncro;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7,11 +10,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 
+import repsolSyncro.constants.PropertyConstants;
 import repsolSyncro.exceptions.SiaException;
+import repsolSyncro.exceptions.SiaExceptionCodes;
 
 public class EmpCsv {
 
@@ -19,6 +25,9 @@ public class EmpCsv {
 	// a la clase Csv y luego transformar esos datos en empleados y devolverlos en
 	// forma de HashMap
 	private static Logger log = Logger.getLogger(EmpCsv.class);
+	private Properties file;
+	private String src;
+	private FileInputStream ip;
 	private static String id = "";
 	private static String name = "";
 	private static String surname1 = "";
@@ -29,11 +38,47 @@ public class EmpCsv {
 	private static String hiringDate = "";
 	private static String yearSalary = "";
 	private static String sickLeave = "";
+	
+
+	public EmpCsv(String src) {
+		super();
+		this.src = src;
+		this.file = new Properties();
+	}
+	
+	public boolean checkConfig() throws SiaException {
+		boolean readed = true;
+		try {
+			ip = new FileInputStream(src);
+			file.load(ip);
+			file.getProperty(PropertyConstants.CSV_PATH);
+			file.getProperty(PropertyConstants.CSV_HEAD_ID);
+			file.getProperty(PropertyConstants.CSV_HEAD_NAME);
+			file.getProperty(PropertyConstants.CSV_HEAD_SURNAME1);
+			file.getProperty(PropertyConstants.CSV_HEAD_SURNAME2);
+			file.getProperty(PropertyConstants.CSV_HEAD_PHONE);
+			file.getProperty(PropertyConstants.CSV_HEAD_EMAIL);
+			file.getProperty(PropertyConstants.CSV_HEAD_JOB);
+			file.getProperty(PropertyConstants.CSV_HEAD_HIRING_DATE);
+			file.getProperty(PropertyConstants.CSV_HEAD_YEAR_SALARY);
+			file.getProperty(PropertyConstants.CSV_HEAD_SICK_LEAVE);
+			log.trace("Fichero config de cliente leido exitosamente");
+		} catch (FileNotFoundException e) {
+			log.error("Fichero no encontrado", e);
+			throw new SiaException(SiaExceptionCodes.MISSING_FILE, e);
+			
+		} catch (IOException e) {
+			log.error("Fallo de entrada o salida", e);
+			throw new SiaException(SiaExceptionCodes.MISSING_FILE, e);
+		}
+		return readed;
+	}
 
 	/**
+	 * Metodo que devuelve la HashMap<String, Employee> con los empleados con su ID como Key
 	 * 
-	 * @param path
-	 * @return
+	 * @param path al csv de empleados que se desea leer
+	 * @return HashMap<String, Employee> con los empleados con su ID como Key
 	 * @throws SiaException
 	 */
 	public static HashMap<String, Employee> getMap(String path) throws SiaException {
@@ -52,22 +97,12 @@ public class EmpCsv {
 			try {
 				List<String> employeeData = getDataFromLine(csvData.get(i));
 
-				employeeID = getEmployeeID(employeeData, columnsOrder, id);
+				employeeID = getEmployeeID(employeeData, columnsOrder);
 
 				// Añadimos al HashMap el objeto Employee que utiliza de clave el ID de ese
 				// empleado
 				Employee emp = createEmployee(employeeData, columnsOrder);
-				hm.put(emp.getId(), emp);
-			} catch (NullPointerException e) {
-				log.warn("Linea (" + i + ") del Fichero \"" + path + "\" esta vacia", e);
-
-			} catch (IndexOutOfBoundsException e) {
-				log.error(
-						"ID: [" + employeeID + "] - NºLinea: (" + i + ") - Fichero: \"" + path + "\" - Linea: {"
-								+ csvData.get(i) + "}\n No se ha podido crear el objeto empleado. Fallo al leer linea",
-						e);
-				hm.put(employeeID, null);
-
+				hm.put(employeeID, emp);
 			} catch (ParseException e) {
 				log.error("ID: [" + employeeID + "] - NºLinea: (" + i + ") - Fichero: \"" + path + "\" - Linea: {"
 						+ csvData.get(i) + "}\n No se ha podido crear el objeto empleado.", e);
@@ -89,13 +124,14 @@ public class EmpCsv {
 	}
 
 	/**
+	 * Este metodo obtiene la ID de un empleado unicamente a traves de la linea de datos sin necesidad
+	 * de tener uin objeto empleado creado
 	 * 
-	 * @param employeeData
-	 * @param columnsOrder
-	 * @param id2
-	 * @return
+	 * @param employeeData datos del empleado
+	 * @param columnsOrder orden de las columnas
+	 * @return String empID con el ID del empleado en cuestion
 	 */
-	private static String getEmployeeID(List<String> employeeData, HashMap<Integer, String> columnsOrder, String id2) {
+	private static String getEmployeeID(List<String> employeeData, HashMap<Integer, String> columnsOrder) {
 		String empID = null;
 
 		for (int i = 0; i < employeeData.size(); i++) {
@@ -109,14 +145,16 @@ public class EmpCsv {
 	}
 
 	/**
+	 * Crea un objeto empleado a traves de su List<String> de datos y el orden de las columnas
 	 * 
-	 * @param employeeData
-	 * @param columnsOrder
-	 * @return
-	 * @throws ParseException
+	 * @param employeeData datos del empleado
+	 * @param columnsOrder orden de las columnas
+	 * @return Employee Con los datos del empleado
+	 * @throws ParseException Se da en caso de que se parsee la fecha
+	 * @throws NumberFormatException Se da en caso de que se parsee el salario
 	 */
 	private static Employee createEmployee(List<String> employeeData, HashMap<Integer, String> columnsOrder)
-			throws ParseException {
+			throws ParseException, NumberFormatException {
 		// Declaramos un empleado
 		Employee createdEmployee = null;
 
@@ -182,9 +220,11 @@ public class EmpCsv {
 	}
 
 	/**
+	 * Separa el string de una linea en una List<String> de datos en el
+	 * orden en el que se encuentre en la linea
 	 * 
-	 * @param line
-	 * @return
+	 * @param line a trocear
+	 * @return List<String> con los datos en el orden en que estan escritos
 	 */
 	private static List<String> getDataFromLine(String line) {
 		// Creamos un ArrayList para obtener los datos de la linea
@@ -245,9 +285,10 @@ public class EmpCsv {
 	}
 
 	/**
-	 * 
-	 * @param lineColums
-	 * @return
+	 * Obtiene un HashMap<Integer, String> con el nombre de las columnas en el valor
+	 * y la posicion en la que se encuentran en el csv en la key
+	 * @param lineColums linea con en nombre de las columnas del csv
+	 * @return HashMap<Integer, String> con las columnas ordenadas
 	 */
 	private static HashMap<Integer, String> getOrderColums(String lineColums) {
 		String[] columnsTitle = lineColums.split(";");

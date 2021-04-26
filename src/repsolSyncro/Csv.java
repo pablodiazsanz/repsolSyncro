@@ -36,7 +36,7 @@ public class Csv {
 
 		// Utilizamos un contador de lineas del fichero para obtener informacion
 		// acerca de la linea que nos da un error o una excepcion
-		int contLine = 2;
+		int contLine = 1;
 		List<String> lineList;
 
 		try {
@@ -48,7 +48,13 @@ public class Csv {
 			lineList = new ArrayList<String>();
 			// Con el bucle while recorremos linea por linea el fichero
 			while (line != null) {
+				try {
 				lineList.add(line);
+				line = br.readLine();
+				} catch (NullPointerException e) {
+					log.warn("Linea (" + contLine + ") del Fichero \"" + path + "\" esta vacia", e);
+
+				}
 				contLine++;
 			}
 
