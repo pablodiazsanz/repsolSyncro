@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -12,6 +13,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import repsolSyncro.EmpTransaction;
+import repsolSyncro.Employee;
+import repsolSyncro.constants.PropertyConstants;
 import repsolSyncro.exceptions.SiaException;
 import repsolSyncro.exceptions.SiaExceptionCodes;
 
@@ -82,5 +86,43 @@ public class CsvAccess {
 			throw new SiaException("fichero con lineas erroneas");
 		}
 		return lineList;
+	}
+	
+	/**
+	 * Este metodo crea o sobreescribe el fichero result.csv para guardar la
+	 * información final.
+	 * 
+	 * @throws SiaException
+	 */
+	public static void createCSV(String writePath) throws SiaException {
+		try {
+			FileWriter fw;
+			fw = new FileWriter(writePath);
+			fw.write("id;name;first surname;second surname;phone;email;job;hiring_date;year_salary;sick_leave;status");
+			fw.close();
+			log.trace(fw);
+		} catch (IOException e) {
+			log.error("Fallo al escribir la información de la cabecera");
+			throw new SiaException(SiaExceptionCodes.IN_OUT, e);
+		}
+	}
+	
+	/**
+	 * Metodo usado para añadir una linea de datos al archivo CSV de resultados
+	 *
+	 * @param EmpTransaction El empleado que queremos añadir con su status
+	 * @param path direccion que recibimos para escribir
+	 * @throws SiaException
+	 */
+	public static void writeCSV(String csvLinea, String path) throws SiaException {
+		try {
+			FileWriter fw = new FileWriter(path, true);
+			fw.write("\n" +csvLinea);
+			fw.close();
+			log.info("[" + csvLinea + "]");
+		} catch (IOException e) {
+			log.error("[" + csvLinea + "] - Fallo al escribir al usuario");
+			throw new SiaException(SiaExceptionCodes.IN_OUT, e);
+		}
 	}
 }

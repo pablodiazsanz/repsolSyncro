@@ -25,7 +25,7 @@ public class EmpCsv {
 	// a la clase Csv y luego transformar esos datos en empleados y devolverlos en
 	// forma de HashMap
 	private static Logger log = Logger.getLogger(EmpCsv.class);
-	private Properties file;
+	private static Properties file;
 	private String src;
 	private FileInputStream ip;
 	private static String id = "";
@@ -306,8 +306,11 @@ public class EmpCsv {
 	}
 	
 	
-	public static void generateTransactionsCsv(List<EmpTransaction> transactionsList) {
-		// TODO Auto-generated method stub
+	public static void generateTransactionsCsv(List<EmpTransaction> transactionsList) throws SiaException {
+		for (EmpTransaction empTransaction : transactionsList) {
+			String line = empTransaction.getEmployee().toCSV() + ";" + empTransaction.getStatus();
+			CsvAccess.writeCSV(line,file.getProperty(PropertyConstants.CSV_PATH));
+		}
 		
 	}
 }
