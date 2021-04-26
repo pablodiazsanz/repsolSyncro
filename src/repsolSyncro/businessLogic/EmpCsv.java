@@ -26,62 +26,47 @@ public class EmpCsv {
 	// En esta clase lo primero que tenemos que hacer es leer el csv que le pasemos
 	// a la clase Csv y luego transformar esos datos en empleados y devolverlos en
 	// forma de HashMap
-	private static Logger log = Logger.getLogger(EmpCsv.class);
-	private static Properties file;
+	private Logger log = Logger.getLogger(EmpCsv.class);
+	private Properties file = new Properties();
 	private String src;
 	private FileInputStream ip;
-	private static String id = "";
-	private static String name = "";
-	private static String surname1 = "";
-	private static String surname2 = "";
-	private static String phone = "";
-	private static String email = "";
-	private static String job = "";
-	private static String hiringDate = "";
-	private static String yearSalary = "";
-	private static String sickLeave = "";
+	private String path = "";
+	private String id = "";
+	private String name = "";
+	private String surname1 = "";
+	private String surname2 = "";
+	private String phone = "";
+	private String email = "";
+	private String job = "";
+	private String hiringDate = "";
+	private String yearSalary = "";
+	private String sickLeave = "";
 
-	public EmpCsv(String src) {
-		super();
-		this.src = src;
-		this.file = new Properties();
-	}
-
-	/**
-	 * Metodo que busca en el fichero .properties si todos los datos tienen valor y
-	 * devuelve true de ser afirmativo y false de ser negativo
-	 * 
-	 * @return boolean true si se encuentran todos los datos en el properties, false
-	 *         si no
-	 * @throws SiaException
-	 */
-	public boolean checkConfig() throws SiaException {
-		boolean readed = true;
+	
+	public void setFile(String src) {
 		try {
-			ip = new FileInputStream(src);
+			FileInputStream ip = new FileInputStream(src);
 			file.load(ip);
-			file.getProperty(PropertyConstants.CSV_PATH);
-			file.getProperty(PropertyConstants.CSV_HEAD_ID);
-			file.getProperty(PropertyConstants.CSV_HEAD_NAME);
-			file.getProperty(PropertyConstants.CSV_HEAD_SURNAME1);
-			file.getProperty(PropertyConstants.CSV_HEAD_SURNAME2);
-			file.getProperty(PropertyConstants.CSV_HEAD_PHONE);
-			file.getProperty(PropertyConstants.CSV_HEAD_EMAIL);
-			file.getProperty(PropertyConstants.CSV_HEAD_JOB);
-			file.getProperty(PropertyConstants.CSV_HEAD_HIRING_DATE);
-			file.getProperty(PropertyConstants.CSV_HEAD_YEAR_SALARY);
-			file.getProperty(PropertyConstants.CSV_HEAD_SICK_LEAVE);
-			log.trace("Fichero config de cliente leido exitosamente");
+			path = file.getProperty(PropertyConstants.CSV_PATH);
+			id = file.getProperty(PropertyConstants.CSV_HEAD_ID);
+			name = file.getProperty(PropertyConstants.CSV_HEAD_NAME);
+			surname1 = file.getProperty(PropertyConstants.CSV_HEAD_SURNAME1);
+			surname2 = file.getProperty(PropertyConstants.CSV_HEAD_SURNAME2);
+			phone = file.getProperty(PropertyConstants.CSV_HEAD_PHONE);
+			email = file.getProperty(PropertyConstants.CSV_HEAD_EMAIL);
+			job = file.getProperty(PropertyConstants.CSV_HEAD_JOB);
+			hiringDate = file.getProperty(PropertyConstants.CSV_HEAD_HIRING_DATE);
+			yearSalary = file.getProperty(PropertyConstants.CSV_HEAD_YEAR_SALARY);
+			sickLeave = file.getProperty(PropertyConstants.CSV_HEAD_SICK_LEAVE);
 		} catch (FileNotFoundException e) {
-			log.error("Fichero no encontrado", e);
-			throw new SiaException(SiaExceptionCodes.MISSING_FILE, e);
-
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (IOException e) {
-			log.error("Fallo de entrada o salida", e);
-			throw new SiaException(SiaExceptionCodes.MISSING_FILE, e);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return readed;
 	}
+
 
 	/**
 	 * Metodo que devuelve la HashMap<String, Employee> con los empleados con su ID
@@ -91,7 +76,7 @@ public class EmpCsv {
 	 * @return HashMap<String, Employee> con los empleados con su ID como Key
 	 * @throws SiaException
 	 */
-	public static HashMap<String, Employee> getMap(String path) throws SiaException {
+	public HashMap<String, Employee> getMap() throws SiaException {
 		HashMap<String, Employee> hm = new HashMap<String, Employee>();
 		// obtenemos la lista de todas las lienas del csv de empleados
 		List<String> csvData = CsvAccess.getData(path);
@@ -141,7 +126,7 @@ public class EmpCsv {
 	 * @param columnsOrder orden de las columnas
 	 * @return String empID con el ID del empleado en cuestion
 	 */
-	private static String getEmployeeID(List<String> employeeData, HashMap<Integer, String> columnsOrder) {
+	private String getEmployeeID(List<String> employeeData, HashMap<Integer, String> columnsOrder) {
 		String empID = null;
 
 		for (int i = 0; i < employeeData.size(); i++) {
@@ -164,7 +149,7 @@ public class EmpCsv {
 	 * @throws ParseException        Se da en caso de que se parsee la fecha
 	 * @throws NumberFormatException Se da en caso de que se parsee el salario
 	 */
-	private static Employee createEmployee(List<String> employeeData, HashMap<Integer, String> columnsOrder)
+	private Employee createEmployee(List<String> employeeData, HashMap<Integer, String> columnsOrder)
 			throws ParseException, NumberFormatException {
 		// Declaramos un empleado
 		Employee createdEmployee = null;
@@ -237,7 +222,7 @@ public class EmpCsv {
 	 * @param line a trocear
 	 * @return List<String> con los datos en el orden en que estan escritos
 	 */
-	private static List<String> getDataFromLine(String line) {
+	private List<String> getDataFromLine(String line) {
 		// Creamos un ArrayList para obtener los datos de la linea
 		List<String> employeeData = new ArrayList<String>();
 
@@ -302,7 +287,7 @@ public class EmpCsv {
 	 * @param lineColums linea con en nombre de las columnas del csv
 	 * @return HashMap<Integer, String> con las columnas ordenadas
 	 */
-	private static HashMap<Integer, String> getOrderColums(String lineColums) {
+	private HashMap<Integer, String> getOrderColums(String lineColums) {
 		String[] columnsTitle = lineColums.split(";");
 		HashMap<Integer, String> columnsOrder = new HashMap<Integer, String>();
 		for (int i = 0; i < columnsTitle.length; i++) {
@@ -317,7 +302,7 @@ public class EmpCsv {
 	 * 
 	 * @throws SiaException
 	 */
-	private static void createEmpCsv() throws SiaException {
+	private void createEmpCsv() throws SiaException {
 		String columsLine = "id;name;first surname;second surname;phone;email;job;hiring_date;year_salary;sick_leave;status";
 		CsvAccess.createCSV(columsLine, file.getProperty(PropertyConstants.CSV_PATH));
 	}
@@ -329,7 +314,7 @@ public class EmpCsv {
 	 * @param transactionsList
 	 * @throws SiaException
 	 */
-	public static void generateTransactionsCsv(List<EmpTransaction> transactionsList) throws SiaException {
+	public void generateTransactionsCsv(List<EmpTransaction> transactionsList) throws SiaException {
 
 		createEmpCsv();
 
@@ -348,7 +333,7 @@ public class EmpCsv {
 		}
 	}
 
-	private static String updatedEmployeeToCsv(Employee updatedEmployee, List<String> modifiedFields, String status) {
+	private String updatedEmployeeToCsv(Employee updatedEmployee, List<String> modifiedFields, String status) {
 		/*
 		 * Estas variables son las que vamos a darle a la cadena updatedData para pasar
 		 * los datos. Estas cadenas se van a modificar si la lista extraData no contiene

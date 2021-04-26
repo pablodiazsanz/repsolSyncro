@@ -13,13 +13,10 @@ package repsolSyncro.constants;
  */
 public class PropertyConstants {
 	//direccion de los fichero properties
-	public static final String PATH_CLIENT_PROPERTY_FILE = "C:\\Users\\pdiazs\\eclipse-workspace\\csvRepsol\\src\\clientConfig.properties";
-	public static final String PATH_SERVER_PROPERTY_FILE = "C:\\Users\\pdiazs\\eclipse-workspace\\csvRepsol\\src\\serverConfig.properties";
-	public static final String PATH_RESULT_PROPERTY_FILE = "C:\\Users\\pdiazs\\eclipse-workspace\\csvRepsol\\src\\resultConfig.properties";
-	
-	//public static final String PATH_CLIENT_PROPERTY_FILE = "C:\\Users\\mparrap\\git\\csvRepsol\\src\\clientConfig.properties";
-	//public static final String PATH_SERVER_PROPERTY_FILE = "C:\\Users\\mparrap\\git\\csvRepsol\\src\\serverConfig.properties";
-	//public static final String PATH_RESULT_PROPERTY_FILE = "C:\\Users\\mparrap\\git\\csvRepsol\\src\\resultConfig.properties";
+	public static final String PATH_CLIENT_PROPERTY_FILE = "DEFAULT.File.PROPERTIES.CSV.client";
+	public static final String PATH_SERVER_DB_PROPERTY_FILE = "DEFAULT.File.PROPERTIES.DB.server";
+	public static final String PATH_SERVER_CSV_PROPERTY_FILE = "DEFAULT.File.PROPERTIES.CSV.server";
+	public static final String PATH_RESULT_PROPERTY_FILE = "DEFAULT.File.PROPERTIES.CSV.result";
 	
 	//Direccion de la BBDD
 	public static final String DB_DRIVER = "DEFAULT.Database.Driver";

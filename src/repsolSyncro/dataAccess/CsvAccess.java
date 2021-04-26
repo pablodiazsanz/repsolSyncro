@@ -6,16 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import repsolSyncro.constants.PropertyConstants;
-import repsolSyncro.entities.EmpTransaction;
-import repsolSyncro.entities.Employee;
 import repsolSyncro.exceptions.SiaException;
 import repsolSyncro.exceptions.SiaExceptionCodes;
 
@@ -31,6 +26,7 @@ public class CsvAccess {
 	 * @throws SiaException 
 	 */
 	public static List<String> getData(String path) throws SiaException {
+		System.out.println(path);
 		File f = new File(path);
 
 		log.trace("Ruta del fichero: " + f.getPath());

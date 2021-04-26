@@ -44,7 +44,7 @@ public class DbAccess {
 		boolean conectado = true;
 		try {
 			file = new Properties();
-			ip = new FileInputStream(PropertyConstants.PATH_SERVER_PROPERTY_FILE);
+			ip = new FileInputStream(PropertyConstants.PATH_SERVER_DB_PROPERTY_FILE);
 			file.load(ip);
 			
 			driver = file.getProperty(PropertyConstants.DB_DRIVER);
