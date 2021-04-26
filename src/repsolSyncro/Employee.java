@@ -7,7 +7,7 @@ import java.util.TimeZone;
  * Objeto empleado que gusrada los datos que nos interesas de estos
  *
  */
-public class Employee {
+public class Employee implements Comparable<Employee>{
 	private String id, name, surname1, surname2, tlf, mail, job;
 	private Date hiringDate;
 	private int yearSalary;
@@ -135,5 +135,15 @@ public class Employee {
 
 		return id + ";" + name + ";" + surname1 + ";" + surname2 + ";" + tlf + ";" + mail + ";" + job + ";"
 				+ hiringDateFormatted + ";" + yearSalary + ";" + sickLeave;
+	}
+
+	@Override
+	public int compareTo(Employee o) {
+		
+		if (this == o) {
+			return 0;
+		} 
+		
+		return 1;
 	}
 }

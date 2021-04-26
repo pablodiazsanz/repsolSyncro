@@ -1,6 +1,7 @@
 package repsolSyncro;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -19,25 +20,26 @@ public class MainClass {
 		// Leer mis empleado
 		// - Leer de un CSV
 		// - Leer de base datos
+		HashMap<String, Employee> serverData;
 		if (csvToDatabase) {
-			HashMap<String, Employee> serverData = EmpDb.getMap();
+			serverData = EmpDb.getMap();
 		} else {
-			HashMap<String, Employee> serverData = EmpCsv.getMap(null);
+			serverData = EmpCsv.getMap(null);
 		}
 		
 		// Sincronizar ambos listados de empleados
 		// - Comparo las listas y genero un objeto de operaciones a ejecutar
-		
+		List<EmpTransaction> transactionsList = EmpCompare.getTransactions(clientData, serverData);
 		
 		// Ejecutar las operaciones de sincronizacion
 		// - Ejecuto las operaciones
 		// - Genero un CSV con las operaciones
 		// - Ejecuto las operaciones contra la BBDD
-		
-		
-		// Vemos si tenemos que comparar csv o sincronizar con la base de datos
-		// e iniciamos la aplicacion
-		
+		if (csvToDatabase) {
+			EmpCsv.generateTransactionsCsv(transactionsList);
+		} else {
+			EmpDb.executeTransactions(transactionsList);
+		}
 		
 	}
 	
