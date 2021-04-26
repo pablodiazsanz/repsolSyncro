@@ -1,4 +1,4 @@
-package csvRepsol.entities;
+package repsolSyncro;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

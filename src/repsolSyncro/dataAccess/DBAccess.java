@@ -1,4 +1,4 @@
-package csvRepsol.dataAccess;
+package repsolSyncro.dataAccess;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,11 +14,12 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import csvRepsol.constants.DatabaseConstants;
-import csvRepsol.constants.PropertyConstants;
-import csvRepsol.entities.Employee;
-import csvRepsol.exceptions.SiaException;
-import csvRepsol.exceptions.SiaExceptionCodes;
+
+import repsolSyncro.Employee;
+import repsolSyncro.constants.DatabaseConstants;
+import repsolSyncro.constants.PropertyConstants;
+import repsolSyncro.exceptions.SiaException;
+import repsolSyncro.exceptions.SiaExceptionCodes;
 /**
  * Clase que conecta e interractua con la base de datos
  *

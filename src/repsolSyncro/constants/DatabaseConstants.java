@@ -1,4 +1,4 @@
-package csvRepsol.constants;
+package repsolSyncro.constants;
 /**
  * valores constantes que responden a las columnas de la BBDD
  * 

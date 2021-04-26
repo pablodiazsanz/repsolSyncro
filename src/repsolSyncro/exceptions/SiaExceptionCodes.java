@@ -1,4 +1,4 @@
-package csvRepsol.exceptions;
+package repsolSyncro.exceptions;
 
 public class SiaExceptionCodes {
 

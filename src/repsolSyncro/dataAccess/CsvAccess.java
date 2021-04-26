@@ -1,4 +1,4 @@
-package csvRepsol.dataAccess;
+package repsolSyncro.dataAccess;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.TimeZone;
 import org.apache.log4j.Logger;
 
-import csvRepsol.constants.PropertyConstants;
-import csvRepsol.entities.Employee;
-import csvRepsol.exceptions.SiaException;
-import csvRepsol.exceptions.SiaExceptionCodes;
+import repsolSyncro.Employee;
+import repsolSyncro.constants.PropertyConstants;
+import repsolSyncro.exceptions.SiaException;
+import repsolSyncro.exceptions.SiaExceptionCodes;
 /**
  * Clase que interactua con los csv, recuperando los datos o escribiendo sobre ellos
  *

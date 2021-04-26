@@ -1,4 +1,4 @@
-package csvRepsol.constants;
+package repsolSyncro.constants;
 
 /**
  * Constantes de busqueda en los valores de los ficheros properties

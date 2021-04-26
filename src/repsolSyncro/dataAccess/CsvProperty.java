@@ -1,4 +1,4 @@
-package csvRepsol.dataAccess;
+package repsolSyncro.dataAccess;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,9 +7,9 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import csvRepsol.constants.PropertyConstants;
-import csvRepsol.exceptions.SiaException;
-import csvRepsol.exceptions.SiaExceptionCodes;
+import repsolSyncro.constants.PropertyConstants;
+import repsolSyncro.exceptions.SiaException;
+import repsolSyncro.exceptions.SiaExceptionCodes;
 /**
  * Clase que lee los fichero properties orientados a los csv y comprueba que estan correctos
  * tambien se usa para iteractura con ellos

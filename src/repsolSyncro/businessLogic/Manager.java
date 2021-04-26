@@ -1,4 +1,4 @@
-package csvRepsol.businessLogic;
+package repsolSyncro.businessLogic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import csvRepsol.dataAccess.CsvAccess;
-import csvRepsol.dataAccess.DBAccess;
-import csvRepsol.entities.Employee;
-import csvRepsol.exceptions.SiaException;
+import repsolSyncro.Employee;
+import repsolSyncro.dataAccess.CsvAccess;
+import repsolSyncro.dataAccess.DBAccess;
+import repsolSyncro.exceptions.SiaException;
 /**
  * Clase que introduce la logica de negocio entorno a la comparacion de los datos
  * indiferentemente del origen de estos
