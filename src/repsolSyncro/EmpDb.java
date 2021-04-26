@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -101,6 +102,11 @@ public class EmpDb {
 
 			return employeeList;
 
+		}
+
+		public static void executeTransactions(List<EmpTransaction> transactionsList) {
+			// TODO Auto-generated method stub
+			
 		}
 
 	
