@@ -1,4 +1,4 @@
-package repsolSyncro;
+package repsolSyncro.dataAccess;
 
 import java.io.BufferedReader;
 import java.io.File;

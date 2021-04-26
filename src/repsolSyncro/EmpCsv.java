@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.TimeZone;
@@ -16,6 +15,7 @@ import java.util.TimeZone;
 import org.apache.log4j.Logger;
 
 import repsolSyncro.constants.PropertyConstants;
+import repsolSyncro.dataAccess.Csv;
 import repsolSyncro.exceptions.SiaException;
 import repsolSyncro.exceptions.SiaExceptionCodes;
 
