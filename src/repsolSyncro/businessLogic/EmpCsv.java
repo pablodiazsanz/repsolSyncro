@@ -1,4 +1,4 @@
-package repsolSyncro;
+package repsolSyncro.businessLogic;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +16,8 @@ import org.apache.log4j.Logger;
 
 import repsolSyncro.constants.PropertyConstants;
 import repsolSyncro.dataAccess.CsvAccess;
+import repsolSyncro.entities.EmpTransaction;
+import repsolSyncro.entities.Employee;
 import repsolSyncro.exceptions.SiaException;
 import repsolSyncro.exceptions.SiaExceptionCodes;
 

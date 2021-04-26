@@ -13,9 +13,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import repsolSyncro.EmpTransaction;
-import repsolSyncro.Employee;
 import repsolSyncro.constants.PropertyConstants;
+import repsolSyncro.entities.EmpTransaction;
+import repsolSyncro.entities.Employee;
 import repsolSyncro.exceptions.SiaException;
 import repsolSyncro.exceptions.SiaExceptionCodes;
 

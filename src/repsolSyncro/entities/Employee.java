@@ -1,4 +1,4 @@
-package repsolSyncro;
+package repsolSyncro.entities;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

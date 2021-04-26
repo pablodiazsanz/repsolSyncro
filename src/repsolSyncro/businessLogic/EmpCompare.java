@@ -1,10 +1,13 @@
-package repsolSyncro;
+package repsolSyncro.businessLogic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+
+import repsolSyncro.entities.EmpTransaction;
+import repsolSyncro.entities.Employee;
 
 public class EmpCompare {
 	
