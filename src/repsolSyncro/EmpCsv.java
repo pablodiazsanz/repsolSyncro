@@ -304,8 +304,19 @@ public class EmpCsv {
 		}
 		return columnsOrder;
 	}
-	
-	
+	/**
+	 * manda crear el csv de resultado de empleados escribiendo la primera linea de las columnas
+	 * @throws SiaException
+	 */
+	public static void createEmpCsv() throws SiaException {
+		String columsLine = "id;name;first surname;second surname;phone;email;job;hiring_date;year_salary;sick_leave;status";
+		CsvAccess.createCSV(columsLine, file.getProperty(PropertyConstants.CSV_PATH));
+	}
+	/**
+	 * manda escribir la lista de List<EmpTransaction> con los empleados a modificar y su status(accion que se va a realizar)
+	 * @param transactionsList
+	 * @throws SiaException
+	 */
 	public static void generateTransactionsCsv(List<EmpTransaction> transactionsList) throws SiaException {
 		for (EmpTransaction empTransaction : transactionsList) {
 			String line = empTransaction.getEmployee().toCSV() + ";" + empTransaction.getStatus();

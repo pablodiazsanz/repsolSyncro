@@ -94,11 +94,11 @@ public class CsvAccess {
 	 * 
 	 * @throws SiaException
 	 */
-	public static void createCSV(String writePath) throws SiaException {
+	public static void createCSV(String line, String writePath) throws SiaException {
 		try {
 			FileWriter fw;
 			fw = new FileWriter(writePath);
-			fw.write("id;name;first surname;second surname;phone;email;job;hiring_date;year_salary;sick_leave;status");
+			fw.write(line);
 			fw.close();
 			log.trace(fw);
 		} catch (IOException e) {
