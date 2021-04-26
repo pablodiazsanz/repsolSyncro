@@ -45,7 +45,13 @@ public class EmpCsv {
 		this.src = src;
 		this.file = new Properties();
 	}
-	
+	/**
+	 * Metodo que busca en el fichero .properties si todos los datos tienen valor y devuelve true de ser afirmativo y
+	 * false de ser negativo
+	 *  
+	 * @return boolean true si se encuentran todos los datos en el properties, false si no
+	 * @throws SiaException
+	 */
 	public boolean checkConfig() throws SiaException {
 		boolean readed = true;
 		try {
