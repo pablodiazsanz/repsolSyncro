@@ -3,11 +3,12 @@ package repsolSyncro;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+
 /**
  * Objeto empleado que gusrada los datos que nos interesas de estos
  *
  */
-public class Employee implements Comparable<Employee>{
+public class Employee implements Comparable<Employee> {
 	private String id, name, surname1, surname2, tlf, mail, job;
 	private Date hiringDate;
 	private int yearSalary;
@@ -139,11 +140,17 @@ public class Employee implements Comparable<Employee>{
 
 	@Override
 	public int compareTo(Employee o) {
-		
-		if (this == o) {
-			return 0;
-		} 
-		
-		return 1;
+
+		if (!this.getName().equalsIgnoreCase(o.getName().toLowerCase())
+				|| !this.getSurname1().equalsIgnoreCase(o.getSurname1())
+				|| !this.getSurname2().equalsIgnoreCase(o.getSurname2()) || !this.getTlf().equalsIgnoreCase(o.getTlf())
+				|| !this.getMail().equalsIgnoreCase(o.getMail()) || !this.getJob().equalsIgnoreCase(o.getJob())
+				|| this.getHiringDate().compareTo(o.getHiringDate()) != 0 || this.getYearSalary() != o.getYearSalary()
+				|| this.isSickLeave() != o.isSickLeave()) {
+			
+			return 1;
+		}
+
+		return 0;
 	}
 }
