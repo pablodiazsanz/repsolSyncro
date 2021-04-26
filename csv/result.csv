@@ -1,0 +1,47 @@
+id;name;first surname;second surname;phone;email;job;hiring_date;year_salary;sick_leave;status
+H61;Jorge;Hernandez;Obtuso;63219874;aqqwr@email.com;Becario;09/10/2016 15:16:13;18000;false;CREATE
+H63;Petunia;Hernandez;Isosceles;63219874;aqqwr@email.com;Becario;11/12/2017 15:16:13;18000;false;CREATE
+H62;Marisa;Hernandez;Agudo;63219874;aqqwr@email.com;"Beca;rio";10/01/2017 15:16:13;18000;false;CREATE
+H21;;;;;;;10/01/2015 15:16:13;;;UPDATE
+H43;;;;;;;10/11/2015 15:16:13;;;UPDATE
+H23;;;;;;;10/01/2015 15:16:13;;true;UPDATE
+H45;;;;;;;10/11/2015 17:16:13;;;UPDATE
+H22;;;;;;;10/01/2015 15:16:13;;;UPDATE
+H44;;;;;;;10/11/2015 15:16:13;;;UPDATE
+H25;;;;;;;10/01/2015 15:16:13;;;UPDATE
+H47;;;;;;;10/11/2015 15:16:13;;;UPDATE
+H24;;;;;;;10/01/2015 15:16:13;;;UPDATE
+H46;;;;;;;10/11/2015 15:16:12;;;UPDATE
+H27;;Gómez;;;;;10/11/2015 15:16:13;;true;UPDATE
+H49;;;;;;;10/12/2015 15:16:13;;;UPDATE
+H26;;Fernández;;;;;;;;UPDATE
+H29;;;;;;;10/11/2015 15:16:13;;;UPDATE
+H50;;;;;;;10/09/2016 15:16:13;;;UPDATE
+H52;;;;;ppwqÃ±wkl@email.com;;10/09/2016 15:16:13;;;UPDATE
+H51;;;;;;;10/09/2016 15:16:13;;;UPDATE
+H10;;;;;;"Abogado; Laboralista";10/01/2015 15:16:13;19000;true;UPDATE
+H31;;;;697536981;;"Jefe; Publicidad";10/11/2015 15:16:13;;;UPDATE
+H53;;;;;;;10/09/2016 15:16:13;;;UPDATE
+H12;;;;;;;10/01/2015 15:16:13;;;UPDATE
+H1;;;;;;;10/01/2015 15:16:13;;;UPDATE
+H11;;;;;;;10/01/2015 15:16:13;;;UPDATE
+H33;;;;;;;10/11/2015 11:16:13;;true;UPDATE
+H2;;;;;;;10/01/2015 15:16:13;;;UPDATE
+H14;�?lvaro;;NULL;;NULL;;10/01/2015 15:16:13;;;UPDATE
+H36;;;;;;;10/11/2015 15:16:13;;;UPDATE
+H3;;;;;;;10/01/2015 15:16:13;;;UPDATE
+H4;;;;;;;10/01/2015 15:16:13;;;UPDATE
+H16;María;Garcia;Garcia;687569856;iiu@email.com;"Inspector;calidad";10/01/2015 15:16:13;18000;false;CREATE
+H38;;;López;;;;10/11/2015 15:16:13;;;UPDATE
+H5;;;;;;;10/01/2015 15:16:13;;;UPDATE
+H15;Andrés;;;;NULL;;10/01/2015 15:17:13;;;UPDATE
+H37;;;;;;;10/11/2015 15:16:13;;;UPDATE
+H18;;;;;;"Responsable;Tienda";10/01/2015 15:16:13;;;UPDATE
+H7;;;;;;;10/01/2015 18:16:13;;true;UPDATE
+H17;;;NULL;;;;10/01/2015 15:16:13;;;UPDATE
+H8;;;;;;;10/01/2015 15:16:13;;;UPDATE
+H9;;;;;;;10/01/2015 15:16:13;;;UPDATE
+H19;;;;;;;10/01/2015 15:16:13;;;UPDATE
+H13;Javier;Serrano;Perez;687456289;iuyfc@email.com;Gerente Tienda;01/10/2015 15:16:13;18000;false;DELETE
+H35;Pablo;D�az;Salinas;632642642;pdiazs@email.com;Analista;11/10/2015 15:16:13;18000;false;DELETE
+H6;Paula;Campos;Fernandez;666444222;opi9uiyh@email.com;Comercial;01/10/2015 15:16:13;18000;false;DELETE

@@ -1,0 +1,50 @@
+nombre;segundo apellido;primer apellido;baja;tlf;email;puesto;fecha contratacion;salario;id
+Alberto;Garcia;Fernandez;false;666777888;tetete@email.com;Contable;10/1/2015 15:16:13;18000;H1
+Jorge;Gallego;Avila;false;666444333;gfg@email.com;RRHH;10/1/2015 15:16:13;18000;H2
+Miguel;Perez;Perez;false;666222333;utyrfuytf@email.com;Recepcionista;10/1/2015 15:16:13;18000;H3
+Xavier;Diaz;Garcia;false;666111999;utgfuf@email.com;Responsable Tienda;10/1/2015 15:16:13;18000;H4
+Alicia;Vivar;Agudo;false;666555444;opiju@email.com;Jefe de Ventas;10/1/2015 15:16:13;18000;H5
+Esther;Avila;Alin  ;true;666888333;tydf@email.com;Responsable Tienda;10/1/2015 18:16:13;18000;H7
+Antonio;Perez;Perez;false;666000888;pok@email.com;Cajero;10/1/2015 15:16:13;18000;H8
+Juan;Garcia;Garcia;false;666222888;ytd@email.com;Responsable Tienda;10/1/2015 15:16:13;18000;H9
+Francisco;Agudo;Perez;true;654888999;oekjioh@email.com;"Abogado; Laboralista";10/1/2015 15:16:13;19000;H10
+Clara;Campos;Garcia;false;645888999;hufcg@email.com;Comercial;10/1/2015 15:16:13;18000;H11
+Alba;Alin;Martinez;false;622445511;szxd@email.com;Jefe de Marketing;10/1/2015 15:16:13;18000;H12
+Álvaro;;Turdasan;false;689745123;;Responsable Tienda;10/1/2015 15:16:13;18000;H14
+Andrés;Perez;Casillas;false;687456213;;Gerente;10/1/2015 15:17:13;18000;H15
+María;Garcia;Garcia;false;687569856;iiu@email.com;"Inspector;calidad";10/1/2015 15:16:13;18000;H16
+Nerea;;Garcia;false;693985264;    hgf@email.com    ;Becario;10/1/2015 15:16:13;18000;H17
+
+
+Manuel;Serrano;Gallego;false;654238942;kjhhg@email.com;"Responsable;Tienda";10/1/2015 15:16:13;18000;H18
+Sergio;Turdasan;Perez;false;612378454; jhgfg@email.com;Gerente;10/1/2015 15:16:13;18000;H19
+Iker;Casillas;Diaz;false;698745321;yyyyuy@email.com;Becario;10/1/2015 15:16:13;18000;H21
+Carlos;Garcia;Vivar;false;689452136;plol@email.com;Becario;10/1/2015 15:16:13;18000;H22
+Alfredo;Pintado;Escobar;true;655656767;alfred@email.com;Encargado de Mantenimiento;10/1/2015 15:16:13;18000;H23
+Ana;del Castillo;Caballero;false;682783723;anacc@email.com;Administrativo;10/1/2015 15:16:13;18000;H24
+Marta;Gimenez;Salamanca;false;602836862;martasg@email.com;Jefe de Proyecto IT;10/1/2015 15:16:13;18000;H25
+Andrea;Sanchez;Fernández;false;617638627;andreafsa@email.com;RRHH;011/10/2015 15:16:13:32;18000;H26
+Elisa;Sevilla;Gómez;true;643342369;elisags@email.com;Encargado de Publicidad;10/11/2015 15:16:13;18000;H27
+Ainhoa;Garcia;Segovia;false;697538627;ainhoasgar@email.com;Responsable Tienda;10/11/2015 15:16:13;18000;H29
+Juan Manuel;Estrella;Romero;false;697536981;juanmare@email.com;"Jefe; Publicidad";10/11/2015 15:16:13;18000;H31
+Elena;Jimenez;de Pablos;true;688889265;helenpj@email.com;Encargado de Mantenimiento;10/11/2015 11:16:13;18000;H33
+Maria Luisa;del Rosario;Gutierrez;false;688225362;mariluigr@email.com;Cajero;10/11/2015 15:16:13;18000;H36
+Ruth;Rey;Delgado;false;668761152;rudere@email.com;Encargado de Limpieza;10/11/2015 15:16:13;18000;H37
+Nerea;López;Gonzalez;false;620338982;neregonlo@email.com;Cajero;10/11/2015 15:16:13;18000;H38
+Maria del Mar;Gutierrez;González;false;665825681;marimargogu@email.com;Administrativo;10/11/2015:32;18000;H39
+Adrian; Casillas ; Lomillo;false;621459870; yjjyuy@email.com;Comercial;10/11/2015 15:16:13;180+00;H40
+Pelayo;Casillas;Pelaez;false;126987413;haqwhdj@email.com;Quimico;10/11/2015 15:16:13;18000;H43
+Diego;Sojunio;Sobarzo;false;632159874;jqhds@email.com;Gerente;10/11/2015 15:16:13;18000;H44
+Maria;Millan;Casado;false;632145987;nhasjndx@email.com;Mantenimiento;10/11/2015 17:16:13;18000;H45
+Sonia;Moran;Puertas;false;654789152;yqwter@email.com;Quimico;10/11/2015 15:16:12;18000;H46
+Beatriz;Huertas;Rosado;false;635987415;aasxz@email.com;Quimico;10/11/2015 15:16:13;18000;H47
+Lucia;Bazan;Pardo;false;698745036;seerfa@email.com;Reponedor;10/21/2015 15:16:13;18*000;H48
+Sara;Obtuso;Hernandez;false;63219874;aqqwr@email.com;Becario;10/12/2015 15:16:13;18000;H49
+Fabiola;Centena;Decena;false;652169743;ghjjhey@email.com;Seguridad;10/21/2015 15:16:13;18000;H50
+Lorena;Moreno;Garcia;false;63897421;gwtdgw@email.com;Becario;10/21/2015 15:16:13;18000;H51
+Diego;Grande;Fernandez;false;652653623;ppwqÃ±wkl@email.com;Seguridad;10/21/2015 15:16:13;18000;H52
+Lidia;Alin;Turdasan;false;655442536;fgwegd@email.com;Comercial;10/21/2015 15:16:13;18000;H53
+Elisa;Vacias;Casas;false;Programador Senior;10/1/2015;18000;10/21/2015 15:16:13;H60
+Jorge;Obtuso;Hernandez;false;63219874;aqqwr@email.com;Becario;9/22/2015 15:16:13;18000;H61
+Marisa;Agudo;Hernandez;false;63219874;aqqwr@email.com;"Beca;rio";10/13/2016 15:16:13;18000;H62
+Petunia;Isosceles;Hernandez;false;63219874;aqqwr@email.com;Becario;11/12/2017 15:16:13;18000;H63
