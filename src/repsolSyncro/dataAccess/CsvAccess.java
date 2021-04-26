@@ -15,9 +15,9 @@ import org.apache.log4j.Logger;
 import repsolSyncro.exceptions.SiaException;
 import repsolSyncro.exceptions.SiaExceptionCodes;
 
-public class Csv {
+public class CsvAccess {
 
-	private static Logger log = Logger.getLogger(Csv.class);
+	private static Logger log = Logger.getLogger(CsvAccess.class);
 
 	/**
 	 * Devuleve un List<String> con todas las lineas del csv pedido

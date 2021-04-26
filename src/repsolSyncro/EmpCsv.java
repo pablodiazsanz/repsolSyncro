@@ -15,7 +15,7 @@ import java.util.TimeZone;
 import org.apache.log4j.Logger;
 
 import repsolSyncro.constants.PropertyConstants;
-import repsolSyncro.dataAccess.Csv;
+import repsolSyncro.dataAccess.CsvAccess;
 import repsolSyncro.exceptions.SiaException;
 import repsolSyncro.exceptions.SiaExceptionCodes;
 
@@ -84,7 +84,7 @@ public class EmpCsv {
 	public static HashMap<String, Employee> getMap(String path) throws SiaException {
 		HashMap<String, Employee> hm = new HashMap<String, Employee>();
 		// obtenemos la lista de todas las lienas del csv de empleados
-		List<String> csvData = Csv.getData(path);
+		List<String> csvData = CsvAccess.getData(path);
 		// obtenemos de la primera linea las columnas y su orden
 		// damos por hecho que la primera son las columnas por que asi lo hemos pactado
 		// y normalizado
