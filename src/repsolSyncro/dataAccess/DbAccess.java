@@ -32,7 +32,13 @@ public class DbAccess {
 	// Contraseña del uisuario que se logea
 	private static String pwd;
 	
-	
+	/**
+	 * Este metodo ejecuta la query pasada por parametro en la base de datos señalada por el properties tambien pasado por parametro
+	 * 
+	 * @param query que va a ser ejecutada en la BBDD
+	 * @param file que posee los datos de diraccion usuario y contraseña de la BBDD
+	 * @throws SiaException
+	 */
 	public static void executeStatement(String query, Properties file) throws SiaException {
 		try {
 			conn = DriverManager.getConnection(file.getProperty(PropertyConstants.DB_DRIVER),
@@ -43,7 +49,7 @@ public class DbAccess {
 			stmt.execute();
 			conn.close();
 		} catch (SQLException e) {
-			log.error("no ha podido ejecutar la operación");
+			log.error("no ha podido ejecutar la siguiente operación: " + query);
 			throw new SiaException(SiaExceptionCodes.SQL_ERROR, e);
 		}
 	}
