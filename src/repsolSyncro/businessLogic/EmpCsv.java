@@ -425,6 +425,7 @@ public class EmpCsv {
 
 		// Si los datos han sido cambiados, añadimos el dato a la linea que vamos a
 		// devolver que es la que se va a insertar en el csv.
+		line += empTransaction.getEmployee().getId() + ";";
 		if (name) {
 			line += empTransaction.getEmployee().getName();
 		}
