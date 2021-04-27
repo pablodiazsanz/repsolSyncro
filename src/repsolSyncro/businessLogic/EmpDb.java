@@ -1,4 +1,4 @@
-package repsolSyncro.dataAccess;
+package repsolSyncro.businessLogic;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import repsolSyncro.constants.DatabaseConstants;
 import repsolSyncro.constants.PropertyConstants;
+import repsolSyncro.dataAccess.DbAccess;
 import repsolSyncro.entities.EmpTransaction;
 import repsolSyncro.entities.Employee;
 import repsolSyncro.exceptions.SiaException;
@@ -42,7 +43,8 @@ public class EmpDb {
 	/**
 	 * Comprueba que la conexion a BBDD se realiza correctamente y tambien comprueba
 	 * que los datos del fichero properties del servidor estan corrrectos
-	 * @param allProperties 
+	 * 
+	 * @param allProperties
 	 * 
 	 * @return true si todo esta bien, false si falla algo
 	 * @throws SiaException
@@ -107,6 +109,14 @@ public class EmpDb {
 
 	}
 
+	/**
+	 * En este metodo mandamos ejecutar en la base de datos H2 todos los posibles
+	 * CREATE, DELETE y UPDATE que se han pedido.
+	 * 
+	 * @param transactionsList La lista de operaciones que obtenemos de la
+	 *                         comparacion
+	 * @throws SiaException
+	 */
 	public static void executeTransactions(List<EmpTransaction> transactionsList) throws SiaException {
 
 		for (EmpTransaction empTransaction : transactionsList) {
@@ -127,21 +137,25 @@ public class EmpDb {
 				String query = "DELETE FROM employee WHERE ID = '" + empTransaction.getEmployee().getId() + "';";
 				DbAccess.executeStatement(query, file);
 			} else {
-				String query = getQueryUpdatedEmployee(empTransaction.getEmployee(), empTransaction.getModifiedFields());
+				String query = getQueryUpdatedEmployee(empTransaction.getEmployee(),
+						empTransaction.getModifiedFields());
 				DbAccess.executeStatement(query, file);
 			}
 		}
 	}
 
-	public static String getQueryUpdatedEmployee(Employee updatedEmployee, List<String> modifiedFields) throws SiaException {
-		// Creamos esta variable para enviarle al fichero CSV el contenido.
+	/**
+	 * Aqui obtenemos la query de modificacion de un empleado para mandarla ejecutar
+	 * 
+	 * @param updatedEmployee El empleado que se modifica
+	 * @param modifiedFields Los campos a modificar
+	 * @return La query UPDATE
+	 * @throws SiaException
+	 */
+	public static String getQueryUpdatedEmployee(Employee updatedEmployee, List<String> modifiedFields)
+			throws SiaException {
+		// Creamos esta variable para iniciar la query que vamos a mandar.
 		String query = "UPDATE employee SET";
-
-		/*
-		 * Estas variables son las que vamos a darle a la cadena updatedData para pasar
-		 * los datos. Estas cadenas se van a modificar si la lista extraData no contiene
-		 * el dato
-		 */
 
 		// Estas variables son las vamos a utilizar para comprobar si el dato ha
 		// cambiado o no.
@@ -188,8 +202,8 @@ public class EmpDb {
 
 		}
 
-		// Si los datos han sido cambiados, establecemos el dato para pasarselo al
-		// fichero CSV.
+		// Si los datos han sido cambiados, establecemos el dato para añadirlo a la
+		// query.
 		if (name) {
 			query += " name = '" + updatedEmployee.getName() + "',";
 		}
@@ -220,8 +234,7 @@ public class EmpDb {
 			query += " sick_leave = '" + updatedEmployee.isSickLeave() + "',";
 		}
 
-		// Metemos los datos en la cadena que vamos a darle al fichero CSV con los datos
-		// correctos.
+		// Completamos la query y se la devolvemos para ejecutarla en la base de datos.
 		query = query.substring(0, query.length() - 1);
 		query += " WHERE ID = '" + updatedEmployee.getId() + "';";
 

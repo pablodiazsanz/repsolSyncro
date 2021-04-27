@@ -9,15 +9,29 @@ import org.apache.log4j.Logger;
 import repsolSyncro.entities.EmpTransaction;
 import repsolSyncro.entities.Employee;
 
+/**
+ * Esta clase sirve para comparar listas de empleados y devolver una lista de
+ * transacciones.
+ *
+ */
 public class EmpCompare {
-	
+
 	private static Logger log = Logger.getLogger(EmpCompare.class);
 
+	/**
+	 * En este método lo que hacemos es obtener las comparaciones de los HashMap del
+	 * cliente y del servidor en forma de transacción de Empleado.
+	 * 
+	 * @param clientData El HashMap con los datos del cliente
+	 * @param serverData El HashMap con los datos del cliente
+	 * @return Una lista de las transacciones de empleados que vamos a hacer
+	 */
 	public static List<EmpTransaction> getTransactions(HashMap<String, Employee> clientData,
 			HashMap<String, Employee> serverData) {
 
 		log.trace("Empezamos la comparacion de usuarios");
-		
+
+		// Iniciamos la lista de transacciones
 		List<EmpTransaction> transactionList = new ArrayList<EmpTransaction>();
 		EmpTransaction empTransaction;
 
@@ -25,6 +39,8 @@ public class EmpCompare {
 		// compararlos con los del servidor
 		for (String i : clientData.keySet()) {
 
+			// Aqui comprobamos si el valor de un empleado es nulo para no compararlo y no
+			// hacer ninguna operación. Lo eliminamos para que no opere.
 			if (clientData.get(i) == null) {
 				serverData.remove(i);
 
@@ -32,19 +48,24 @@ public class EmpCompare {
 
 				/*
 				 * Aquí vamos a modificar el empleado si tiene algún dato modificado y lo
-				 * pasamos al tercer CSV como un empleado que se ha modificado, solo con los
-				 * datos cambiados. Se actualize o no, lo eliminaremos de la lista del servidor
-				 * para saber cuales han sido eliminados de la lista de cliente, y asi saber los
-				 * que hay que borrar.
+				 * pasamos a la lista de transacciones de empleado como UPDATE, unicamente con
+				 * los datos cambiados. Se actualize o no, lo eliminaremos de la lista del
+				 * servidor para saber cuales han sido eliminados de la lista de cliente, y asi
+				 * saber los que hay que borrar.
 				 */
 
 				if (serverData.containsKey(i) && serverData.get(i) != null) {
-					
+
+					// Utilizamos el método compareTo de la clase empleado que se ha implementado
+					// para saber si hay algun dato modificado
 					if (clientData.get(i).compareTo(serverData.get(i)) == 1) {
+
 						log.trace("Entramos en el métodp updateEmployee para actualizar al empleado ["
 								+ clientData.get(i).getId() + "]");
+
 						empTransaction = updateEmployee(clientData.get(i), serverData.get(i));
 						transactionList.add(empTransaction);
+
 						log.debug("Modificando al empleado: " + clientData.get(i).toString() + "\n datos anteriores: "
 								+ serverData.get(i).toString());
 
@@ -55,50 +76,61 @@ public class EmpCompare {
 					}
 
 					serverData.remove(i);
+
 				} else {
 					// Aquí, si no se ha modificado, como el empleado no está en la lista del
-					// servidor
-					// lo pasamos al tercer CSV como un nuevo empleado que se ha creado.
+					// servidor, lo pasamos a la lista de transacciones como CREATE
 					if (serverData.get(i) == null) {
 						serverData.remove(i);
 					}
 					log.debug("Creando al empleado: " + clientData.get(i).toString());
+
 					empTransaction = new EmpTransaction("CREATE", clientData.get(i));
 					transactionList.add(empTransaction);
 				}
 			}
 		}
-		// Aquí pasamos al tercer CSV los empleados que se encuentran en la lista del
-		// servidor pero
-		// que han sido eliminados de la lista del cliente, por lo tanto los que se van
-		// a eliminar.
+
+		// Aquí pasamos los datos que hay que hay que eliminar y pasarlo a la lista de
+		// transacciones de empleado como DELETE
 		log.trace("Empezamos el borrado de usuarios");
+
 		for (String key : serverData.keySet()) {
 			log.debug("Eliminando al empleado: " + serverData.get(key).toString());
+
 			empTransaction = new EmpTransaction("DELETE", serverData.get(key));
 			transactionList.add(empTransaction);
 		}
-		
+
 		return transactionList;
 	}
 
+	/**
+	 * En este método vamos a obtener la transaccion del empleado que se modifica.
+	 * En los empleados modificados, se necesita tambien pasarle al constructor la
+	 * lista de los campos modificados para así, cuando se ejecuten las operaciones
+	 * saber el campo que se ha modificado.
+	 * 
+	 * @param clientEmployee El empleado de la lista del cliente
+	 * @param serverEmployee El empleado de la lista del cliente
+	 * @return La transaccion del empleado con el empleado, el estado (UPDATE) y la
+	 *         lista de campos modificados
+	 */
 	private static EmpTransaction updateEmployee(Employee clientEmployee, Employee serverEmployee) {
-		
+
 		List<String> modifiedFields = new ArrayList<String>();
 		log.trace("Lista de Strings con los datos que no se modifican creada");
 
 		/*
 		 * En los if, comparamos dato a dato para saber cuales han sido modificados, y
-		 * si se han modificado, metemos el dato del cliente en el empleado que
-		 * devolvemos.
-		 * 
-		 * Si no se ha modificado le pasamos el titulo del dato que no se modifica a la
-		 * lista para que el manager sepa los que no se han modificado.
+		 * si se han modificado, añadimos a la lista de datos modificados el dato que se
+		 * ha modificado. De esta forma, luego sabremos los que hay que modificar y los
+		 * que no.
 		 */
 		if (!clientEmployee.getName().equalsIgnoreCase(serverEmployee.getName())) {
 			clientEmployee.setName(clientEmployee.getName());
-			log.debug("el empleado [" + clientEmployee.getId() + "] cambia el (nombre) a: {"
-					+ clientEmployee.getName() + "}");
+			log.debug("el empleado [" + clientEmployee.getId() + "] cambia el (nombre) a: {" + clientEmployee.getName()
+					+ "}");
 			modifiedFields.add("name");
 		}
 		if (!clientEmployee.getSurname1().equalsIgnoreCase(serverEmployee.getSurname1())) {
@@ -115,8 +147,8 @@ public class EmpCompare {
 		}
 		if (!clientEmployee.getTlf().equalsIgnoreCase(serverEmployee.getTlf())) {
 			clientEmployee.setTlf(clientEmployee.getTlf());
-			log.debug("el empleado [" + clientEmployee.getId() + "] cambia el (telefono) a: {"
-					+ clientEmployee.getTlf() + "}");
+			log.debug("el empleado [" + clientEmployee.getId() + "] cambia el (telefono) a: {" + clientEmployee.getTlf()
+					+ "}");
 			modifiedFields.add("phone");
 		}
 		if (!clientEmployee.getMail().equalsIgnoreCase(serverEmployee.getMail())) {
@@ -149,7 +181,7 @@ public class EmpCompare {
 					+ clientEmployee.isSickLeave() + "}");
 			modifiedFields.add("sickLeave");
 		}
-		
+
 		EmpTransaction empTransaction = new EmpTransaction("UPDATE", clientEmployee, modifiedFields);
 		return empTransaction;
 	}

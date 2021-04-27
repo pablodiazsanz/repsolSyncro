@@ -11,9 +11,9 @@ import org.apache.log4j.Logger;
 
 import repsolSyncro.businessLogic.EmpCompare;
 import repsolSyncro.businessLogic.EmpCsv;
+import repsolSyncro.businessLogic.EmpDb;
 import repsolSyncro.businessLogic.PropertiesChecker;
 import repsolSyncro.constants.PropertyConstants;
-import repsolSyncro.dataAccess.EmpDb;
 import repsolSyncro.entities.EmpTransaction;
 import repsolSyncro.entities.Employee;
 import repsolSyncro.exceptions.SiaException;

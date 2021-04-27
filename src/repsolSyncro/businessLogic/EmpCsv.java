@@ -21,27 +21,42 @@ import repsolSyncro.entities.Employee;
 import repsolSyncro.exceptions.SiaException;
 import repsolSyncro.exceptions.SiaExceptionCodes;
 
+/**
+ * En esta clase lo primero que tenemos que hacer es leer el csv que le pasemos
+ * a la clase Csv y luego transformar esos datos en empleados y devolverlos en
+ * forma de HashMap
+ * 
+ */
 public class EmpCsv {
 
-	// En esta clase lo primero que tenemos que hacer es leer el csv que le pasemos
-	// a la clase Csv y luego transformar esos datos en empleados y devolverlos en
-	// forma de HashMap
 	private Logger log = Logger.getLogger(EmpCsv.class);
 	private Properties file;
+	// El path que obtenemos de las propiedades
 	private String path = "";
+	// El nombre del campo identificador de las cabeceras del csv
 	private String id = "";
+	// El nombre del campo nombre de las cabeceras del csv
 	private String name = "";
+	// El nombre del campo primer apellido de las cabeceras del csv
 	private String surname1 = "";
+	// El nombre del campo segundo apellido de las cabeceras del csv
 	private String surname2 = "";
+	// El nombre del campo telefono de las cabeceras del csv
 	private String phone = "";
+	// El nombre del campo email de las cabeceras del csv
 	private String email = "";
+	// El nombre del campo puesto de trabajo de las cabeceras del csv
 	private String job = "";
+	// El nombre del campo fecha de contratacion de las cabeceras del csv
 	private String hiringDate = "";
+	// El nombre del campo salario anual de las cabeceras del csv
 	private String yearSalary = "";
+	// El nombre del campo baja medica de las cabeceras del csv
 	private String sickLeave = "";
 
-	
-	public void setFile(String src) {
+	public void setFile(String src) throws SiaException {
+
+		// Cargamos todos los datos del fichero de propiedades en las variables
 		try {
 			file = new Properties();
 			FileInputStream ip = new FileInputStream(src);
@@ -57,47 +72,59 @@ public class EmpCsv {
 			hiringDate = file.getProperty(PropertyConstants.CSV_HEAD_HIRING_DATE);
 			yearSalary = file.getProperty(PropertyConstants.CSV_HEAD_YEAR_SALARY);
 			sickLeave = file.getProperty(PropertyConstants.CSV_HEAD_SICK_LEAVE);
+
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String message = "";
+			throw new SiaException(SiaExceptionCodes.MISSING_FILE, message, e);
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String message = "";
+			throw new SiaException(SiaExceptionCodes.IN_OUT, message, e);
 		}
 	}
-
 
 	/**
 	 * Metodo que devuelve la HashMap<String, Employee> con los empleados con su ID
 	 * como Key
 	 * 
-	 * @param path al csv de empleados que se desea leer
 	 * @return HashMap<String, Employee> con los empleados con su ID como Key
 	 * @throws SiaException
 	 */
 	public HashMap<String, Employee> getMap() throws SiaException {
+
 		HashMap<String, Employee> hm = new HashMap<String, Employee>();
-		// obtenemos la lista de todas las lienas del csv de empleados
-		
+
+		// Obtenemos la lista de los datos del csv de empleados
 		List<String> csvData = CsvAccess.getData(path);
-		// obtenemos de la primera linea las columnas y su orden
-		// damos por hecho que la primera son las columnas por que asi lo hemos pactado
-		// y normalizado
+
+		// Obtenemos de la primera linea las columnas y su orden.
+		// Damos por hecho que la primera son las columnas por que
+		// asi lo hemos pactado y normalizado
 
 		HashMap<Integer, String> columnsOrder = getOrderColums(csvData.get(0));
-		// borramos la primera linea para que no nos moleste
+
+		// Borramos la primera linea para que no nos moleste
 		csvData.remove(0);
+
 		String employeeID = "NO ID";
+
+		// Recorremos linea a linea de la lista de datos del csv para obtener los
+		// empleados con el id y meterlos en un HashMap. Si hay algun error con alguno
+		// de ellos, lo que haremos será meter en el HashMap el id de clave con el valor
+		// nulo y asi sabremos que no hay que operar con ellos.
 		for (int i = 0; i < csvData.size(); i++) {
 			try {
+				// Obtenemos los datos de la linea
 				List<String> employeeData = getDataFromLine(csvData.get(i));
 
+				// Obtenemos el id del empleado
 				employeeID = getEmployeeID(employeeData, columnsOrder);
 
 				// Añadimos al HashMap el objeto Employee que utiliza de clave el ID de ese
 				// empleado
 				Employee emp = createEmployee(employeeData, columnsOrder);
 				hm.put(employeeID, emp);
+
 			} catch (ParseException e) {
 				log.error("ID: [" + employeeID + "] - NºLinea: (" + i + ") - Fichero: \"" + path + "\" - Linea: {"
 						+ csvData.get(i) + "}\n No se ha podido crear el objeto empleado.", e);
@@ -127,6 +154,7 @@ public class EmpCsv {
 	 * @return String empID con el ID del empleado en cuestion
 	 */
 	private String getEmployeeID(List<String> employeeData, HashMap<Integer, String> columnsOrder) {
+
 		String empID = null;
 
 		for (int i = 0; i < employeeData.size(); i++) {
@@ -152,7 +180,6 @@ public class EmpCsv {
 	private Employee createEmployee(List<String> employeeData, HashMap<Integer, String> columnsOrder)
 			throws ParseException, NumberFormatException {
 		// Declaramos un empleado
-		
 
 		// Creamos todas las variables vacías que posteriormente añadiremos al empleado
 		// creado
@@ -212,7 +239,8 @@ public class EmpCsv {
 			}
 
 		}
-		return new Employee(empID, empName, empSurname1, empSurname2, empPhone, empEmail, empJob, empHiringDate, empYearSalary, empSickLeave);
+		return new Employee(empID, empName, empSurname1, empSurname2, empPhone, empEmail, empJob, empHiringDate,
+				empYearSalary, empSickLeave);
 	}
 
 	/**
@@ -297,7 +325,7 @@ public class EmpCsv {
 	}
 
 	/**
-	 * manda crear el csv de resultado de empleados escribiendo la primera linea de
+	 * Manda crear el csv de resultado de empleados escribiendo la primera linea de
 	 * las columnas
 	 * 
 	 * @throws SiaException
@@ -308,8 +336,9 @@ public class EmpCsv {
 	}
 
 	/**
-	 * manda escribir la lista de List<EmpTransaction> con los empleados a modificar
-	 * y su status(accion que se va a realizar)
+	 * Manda escribir la lista de List<EmpTransaction> con los empleados a modificar
+	 * y su status(accion que se va a realizar), y en el caso de las modificaciones,
+	 * tambien la lista de los campos modificados.
 	 * 
 	 * @param transactionsList
 	 * @throws SiaException
@@ -326,19 +355,25 @@ public class EmpCsv {
 				CsvAccess.writeCSV(line, file.getProperty(PropertyConstants.CSV_PATH));
 
 			} else {
-				String line = updatedEmployeeToCsv(empTransaction.getEmployee(), empTransaction.getModifiedFields(),
-						empTransaction.getStatus());
+				String line = updatedEmployeeToCsv(empTransaction);
 				CsvAccess.writeCSV(line, file.getProperty(PropertyConstants.CSV_PATH));
 
 			}
 		}
 	}
 
-	private String updatedEmployeeToCsv(Employee updatedEmployee, List<String> modifiedFields, String status) {
+	/**
+	 * En este método lo que hacemos es crear una linea de csv con los datos a
+	 * modificar del empleado y el estado.
+	 * 
+	 * @param empTransaction
+	 * @return
+	 */
+	private String updatedEmployeeToCsv(EmpTransaction empTransaction) {
 		/*
 		 * Estas variables son las que vamos a darle a la cadena updatedData para pasar
-		 * los datos. Estas cadenas se van a modificar si la lista extraData no contiene
-		 * el dato
+		 * los datos. Estas cadenas se van a modificar si la lista modifiedFields
+		 * contiene el dato
 		 */
 
 		String line = "";
@@ -356,77 +391,77 @@ public class EmpCsv {
 		boolean sickLeave = false;
 
 		// Recorremos la lista para saber que datos no se han cambiado.
-		for (int i = 0; i < modifiedFields.size(); i++) {
+		for (int i = 0; i < empTransaction.getModifiedFields().size(); i++) {
 
-			if (modifiedFields.get(i).equals("name")) {
+			if (empTransaction.getModifiedFields().get(i).equals("name")) {
 				name = true;
 
-			} else if (modifiedFields.get(i).equals("surname1")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("surname1")) {
 				surname1 = true;
 
-			} else if (modifiedFields.get(i).equals("surname2")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("surname2")) {
 				surname2 = true;
 
-			} else if (modifiedFields.get(i).equals("phone")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("phone")) {
 				phone = true;
 
-			} else if (modifiedFields.get(i).equals("email")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("email")) {
 				email = true;
 
-			} else if (modifiedFields.get(i).equals("job")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("job")) {
 				job = true;
 
-			} else if (modifiedFields.get(i).equals("hiringDate")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("hiringDate")) {
 				hiringDate = true;
 
-			} else if (modifiedFields.get(i).equals("yearSalary")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("yearSalary")) {
 				yearSalary = true;
 
-			} else if (modifiedFields.get(i).equals("sickLeave")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("sickLeave")) {
 				sickLeave = true;
 			}
 
 		}
 
-		// Si los datos han sido cambiados, establecemos el dato para pasarselo al
-		// fichero CSV.
+		// Si los datos han sido cambiados, añadimos el dato a la linea que vamos a
+		// devolver que es la que se va a insertar en el csv.
 		if (name) {
-			line += updatedEmployee.getName();
+			line += empTransaction.getEmployee().getName();
 		}
 		line += ";";
 		if (surname1) {
-			line += updatedEmployee.getSurname1();
+			line += empTransaction.getEmployee().getSurname1();
 		}
 		line += ";";
 		if (surname2) {
-			line += updatedEmployee.getSurname2();
+			line += empTransaction.getEmployee().getSurname2();
 		}
 		line += ";";
 		if (phone) {
-			line += updatedEmployee.getTlf();
+			line += empTransaction.getEmployee().getTlf();
 		}
 		line += ";";
 		if (email) {
-			line += updatedEmployee.getMail();
+			line += empTransaction.getEmployee().getMail();
 		}
 		line += ";";
 		if (job) {
-			line += updatedEmployee.getJob();
+			line += empTransaction.getEmployee().getJob();
 		}
 		line += ";";
 		if (hiringDate) {
-			line += new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(updatedEmployee.getHiringDate());
+			line += new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(empTransaction.getEmployee().getHiringDate());
 		}
 		line += ";";
 		if (yearSalary) {
-			line += updatedEmployee.getYearSalary();
+			line += empTransaction.getEmployee().getYearSalary();
 		}
 		line += ";";
 		if (sickLeave) {
-			line += updatedEmployee.isSickLeave();
+			line += empTransaction.getEmployee().isSickLeave();
 		}
 		line += ";";
-		line += status;
+		line += empTransaction.getStatus();
 
 		return line;
 	}
