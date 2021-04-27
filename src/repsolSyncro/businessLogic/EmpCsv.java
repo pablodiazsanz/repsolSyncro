@@ -54,9 +54,17 @@ public class EmpCsv {
 	// El nombre del campo baja medica de las cabeceras del csv
 	private String sickLeave = "";
 
-	public void setFile(String src) throws SiaException {
-
-		// Cargamos todos los datos del fichero de propiedades en las variables
+	
+	
+	public EmpCsv(String direccion) throws SiaException {
+		String src = "";
+		if(direccion.toLowerCase().equals("client")) {
+			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE);
+		} else if(direccion.toLowerCase().equals("server")) {
+			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_SERVER_CSV_PROPERTY_FILE);
+		} else if(direccion.toLowerCase().equals("result")) {
+			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_RESULT_PROPERTY_FILE);
+		}
 		try {
 			file = new Properties();
 			FileInputStream ip = new FileInputStream(src);

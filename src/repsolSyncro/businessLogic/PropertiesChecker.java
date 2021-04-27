@@ -20,17 +20,37 @@ public class PropertiesChecker {
 	// array con las direcciones de los ficheros si trabajamos contra BBDD
 	private static String[] ficherosCsvToBD = { PropertyConstants.PATH_SERVER_DB_PROPERTY_FILE,
 			PropertyConstants.PATH_CLIENT_PROPERTY_FILE, PropertyConstants.PATH_RESULT_PROPERTY_FILE };
+	// ruta al fichero con todos los properties
+	// private static String PropertiesPath = "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
+	private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
+	// eleccion de manera de trabajo
+	private static boolean csvToDatabase;
+	//
+	private static Properties allProperties;
 
 	/**
-	 * Metodo que nos confirma si todos los datos en los archivos properties estan disponibles
-	 * o si debemos no iniciar el programa
+	 * Metodo que nos confirma si todos los datos en los archivos properties estan
+	 * disponibles o si debemos no iniciar el programa
 	 * 
-	 * @param allProperties fichero properties con la direccion dle resto de properties
+	 * @param allProperties fichero properties con la direccion dle resto de
+	 *                      properties
 	 * @param csvToDatabase true si trabajamos contra BBDD false si es full csv
 	 * @return true si todo es correcto false si no lo es
 	 * @throws SiaException
 	 */
-	public static boolean checker(Properties allProperties, boolean csvToDatabase) throws SiaException {
+	public static boolean checker() throws SiaException {
+		allProperties = new Properties();
+		try {
+			FileInputStream ip = new FileInputStream(PropertiesPath);
+			allProperties.load(ip);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		csvToDatabase = Boolean.parseBoolean(allProperties.getProperty(PropertyConstants.CSV_TO_DATABASE));
 		boolean valido = true;
 		String[] ficheros = {};
 		if (csvToDatabase) {
@@ -47,6 +67,14 @@ public class PropertiesChecker {
 		}
 
 		return valido;
+	}
+
+	public static boolean getCsvToDatabase() {
+		return csvToDatabase;
+	}
+	
+	public static Properties getAllProperties() {
+		return allProperties;
 	}
 
 	/**

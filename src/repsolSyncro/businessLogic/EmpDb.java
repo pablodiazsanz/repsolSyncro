@@ -39,6 +39,11 @@ public class EmpDb {
 	private static String user;
 	// Contraseña del uisuario que se logea
 	private static String pwd;
+	
+	
+
+	public EmpDb() {
+	}
 
 	/**
 	 * Comprueba que la conexion a BBDD se realiza correctamente y tambien comprueba
@@ -49,11 +54,12 @@ public class EmpDb {
 	 * @return true si todo esta bien, false si falla algo
 	 * @throws SiaException
 	 */
-	public static boolean tryConnection(Properties allProperties) throws SiaException {
+	public static boolean tryConnection() throws SiaException {
 		boolean connected = true;
 		try {
 			file = new Properties();
-			ip = new FileInputStream(allProperties.getProperty(PropertyConstants.PATH_SERVER_DB_PROPERTY_FILE));
+			ip = new FileInputStream(PropertiesChecker.getAllProperties()
+					.getProperty(PropertyConstants.PATH_SERVER_DB_PROPERTY_FILE));
 			file.load(ip);
 
 			driver = file.getProperty(PropertyConstants.DB_DRIVER);
