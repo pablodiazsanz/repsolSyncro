@@ -50,7 +50,7 @@ public class EmpDb {
 	 * @throws SiaException
 	 */
 	public static boolean tryConnection(Properties allProperties) throws SiaException {
-		boolean conectado = true;
+		boolean connected = true;
 		try {
 			file = new Properties();
 			ip = new FileInputStream(allProperties.getProperty(PropertyConstants.PATH_SERVER_DB_PROPERTY_FILE));
@@ -62,17 +62,21 @@ public class EmpDb {
 
 			conn = DriverManager.getConnection(driver, user, pwd);
 			conn.close();
+			
 		} catch (SQLException e) {
-			log.error("Error de conexion a la bbdd");
-			throw new SiaException(SiaExceptionCodes.SQL_ERROR, e);
+			String message = "Error de conexion a la bbdd";
+			throw new SiaException(SiaExceptionCodes.SQL_ERROR, message, e);
+			
 		} catch (FileNotFoundException e) {
-			log.error("No se ha encontrado el fichero o este no existe");
-			throw new SiaException(SiaExceptionCodes.MISSING_FILE, e);
+			String message = "No se ha encontrado el fichero o este no existe";
+			throw new SiaException(SiaExceptionCodes.MISSING_FILE, message, e);
+			
 		} catch (IOException e) {
-			log.error("Error de entrada o salida de datos");
-			throw new SiaException(SiaExceptionCodes.IN_OUT, e);
+			String message = "Error de entrada o salida de datos";
+			throw new SiaException(SiaExceptionCodes.IN_OUT, message, e);
+			
 		}
-		return conectado;
+		return connected;
 	}
 
 	/**
@@ -101,8 +105,8 @@ public class EmpDb {
 			}
 
 		} catch (SQLException e) {
-			log.error("Error al obtener datos de la bbdd");
-			throw new SiaException(SiaExceptionCodes.SQL_ERROR, e);
+			String message = "Error al obtener datos de la bbdd";
+			throw new SiaException(SiaExceptionCodes.SQL_ERROR, message, e);
 		}
 
 		return employeeList;

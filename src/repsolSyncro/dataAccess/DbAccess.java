@@ -21,16 +21,6 @@ public class DbAccess {
 	private static Connection conn;
 	// loggger para poder escribir las trazas del codigo en los logs
 	private static Logger log = Logger.getLogger(DbAccess.class);
-	// objetos para leer el archivo properties
-	private static Properties file;
-	private static FileInputStream ip;
-	// datos de conexion a la BBDD
-	// direccion de la BBDD
-	private static String driver;
-	// Usuario que se loguea en la BBDD
-	private static String user;
-	// Contraseña del uisuario que se logea
-	private static String pwd;
 	
 	/**
 	 * Este metodo ejecuta la query pasada por parametro en la base de datos señalada por el properties tambien pasado por parametro
@@ -49,8 +39,8 @@ public class DbAccess {
 			stmt.execute();
 			conn.close();
 		} catch (SQLException e) {
-			log.error("no ha podido ejecutar la siguiente operación: " + query);
-			throw new SiaException(SiaExceptionCodes.SQL_ERROR, e);
+			String message = "No ha podido ejecutar la siguiente operación: " + query;
+			throw new SiaException(SiaExceptionCodes.SQL_ERROR, message, e);
 		}
 	}
 
