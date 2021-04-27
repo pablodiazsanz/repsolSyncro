@@ -24,24 +24,33 @@ public class MainClass {
 
 	private static boolean csvToDatabase;
 	private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
-	//private static String PropertiesPath = "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
+	// private static String PropertiesPath =
+	// "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
 
 	public static void main(String[] args) {
 		EmpCsv empCsv = new EmpCsv();
 		try {
+			
+			// Cargamos las propiedades
 			FileInputStream ip = new FileInputStream(PropertiesPath);
 			Properties allProperties = new Properties();
 			allProperties.load(ip);
-			boolean seguir = PropertiesChecker.checker(allProperties, csvToDatabase);
+			
+			// Comprobamos si las propiedades estan completas
+			boolean checkAndGo = PropertiesChecker.checker(allProperties, csvToDatabase);
 			csvToDatabase = Boolean.parseBoolean(allProperties.getProperty(PropertyConstants.CSV_TO_DATABASE));
-			if(csvToDatabase) {
-				seguir = EmpDb.tryConnection(allProperties);
+
+			// Comprobamos si queremos sincronizar con la base de datos o con csv
+			if (csvToDatabase) {
+				checkAndGo = EmpDb.tryConnection(allProperties);
 			}
-			if (seguir) {
-				
-					// Leer los empleados de un origen
-					// - Leo de un CSV
-					empCsv.setFile(allProperties.getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE));
+
+			// Si todo es correcto, arrancamos el programa
+			if (checkAndGo) {
+
+				// Leer los empleados de un origen
+				// - Leo de un CSV
+				empCsv.setFile(allProperties.getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE));
 				HashMap<String, Employee> clientData = empCsv.getMap();
 
 				// Leer mis empleado
@@ -72,16 +81,14 @@ public class MainClass {
 
 				}
 			}
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (FileNotFoundException e) {
+			log.error("Ha ocurrido un error de acceso al fichero", e);
 		} catch (SiaException e) {
-			// TODO Auto-generated catch block
+			log.error("Obtenemos un error", e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Ha ocurrido un error de entrada o salida de datos", e);
 		} finally {
-			log.trace("sacabao");
+			log.trace("Finaliza el programa");
 		}
 
 	}
