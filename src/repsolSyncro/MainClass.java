@@ -23,20 +23,20 @@ public class MainClass {
 	private static Logger log = Logger.getLogger(MainClass.class);
 
 	private static boolean csvToDatabase = true;
-	//private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
-	private static String PropertiesPath = "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
+	private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
+	//private static String PropertiesPath = "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
 
 	public static void main(String[] args) {
 		EmpCsv empCsv = new EmpCsv();
-		boolean seguir = true;
 		try {
 			FileInputStream ip = new FileInputStream(PropertiesPath);
 			Properties allProperties = new Properties();
 			allProperties.load(ip);
+			boolean seguir = PropertiesChecker.checker(allProperties, csvToDatabase);
 			if(csvToDatabase) {
 				seguir = EmpDb.tryConnection(allProperties);
 			}
-			if (seguir && PropertiesChecker.checker(allProperties)) {
+			if (seguir) {
 				
 					// Leer los empleados de un origen
 					// - Leo de un CSV

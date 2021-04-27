@@ -12,14 +12,32 @@ import repsolSyncro.exceptions.SiaException;
 import repsolSyncro.exceptions.SiaExceptionCodes;
 
 public class PropertiesChecker {
-	
-	private static Logger log = Logger.getLogger(PropertiesChecker.class);
-	private static String[] ficheros = { PropertyConstants.PATH_SERVER_DB_PROPERTY_FILE,
-			PropertyConstants.PATH_CLIENT_PROPERTY_FILE, PropertyConstants.PATH_SERVER_CSV_PROPERTY_FILE,
-			PropertyConstants.PATH_RESULT_PROPERTY_FILE };
 
-	public static boolean checker(Properties allProperties) throws SiaException {
+	private static Logger log = Logger.getLogger(PropertiesChecker.class);
+	// array con las direcciones de los ficheros si trabajamos todo en csv
+	private static String[] ficherosCsvToCsv = { PropertyConstants.PATH_CLIENT_PROPERTY_FILE,
+			PropertyConstants.PATH_SERVER_CSV_PROPERTY_FILE, PropertyConstants.PATH_RESULT_PROPERTY_FILE };
+	// array con las direcciones de los ficheros si trabajamos contra BBDD
+	private static String[] ficherosCsvToBD = { PropertyConstants.PATH_SERVER_DB_PROPERTY_FILE,
+			PropertyConstants.PATH_CLIENT_PROPERTY_FILE, PropertyConstants.PATH_RESULT_PROPERTY_FILE };
+
+	/**
+	 * Metodo que nos confirma si todos los datos en los archivos properties estan disponibles
+	 * o si debemos no iniciar el programa
+	 * 
+	 * @param allProperties fichero properties con la direccion dle resto de properties
+	 * @param csvToDatabase true si trabajamos contra BBDD false si es full csv
+	 * @return true si todo es correcto false si no lo es
+	 * @throws SiaException
+	 */
+	public static boolean checker(Properties allProperties, boolean csvToDatabase) throws SiaException {
 		boolean valido = true;
+		String[] ficheros = {};
+		if (csvToDatabase) {
+			ficheros = ficherosCsvToBD;
+		} else {
+			ficheros = ficherosCsvToCsv;
+		}
 		for (int i = 0; i < ficheros.length; i++) {
 			if (ficheros[i].contains("CSV")) {
 				valido = checkCsvProperties(allProperties.getProperty(ficheros[i]));
@@ -30,7 +48,7 @@ public class PropertiesChecker {
 
 		return valido;
 	}
-	
+
 	/**
 	 * Metodo que busca en el fichero .properties si todos los datos tienen valor y
 	 * devuelve true de ser afirmativo y false de ser negativo
@@ -39,7 +57,6 @@ public class PropertiesChecker {
 	 *         si no
 	 * @throws SiaException
 	 */
-	
 	private static boolean checkCsvProperties(String src) throws SiaException {
 		boolean readed = false;
 		try {
@@ -69,7 +86,15 @@ public class PropertiesChecker {
 		}
 		return readed;
 	}
-	
+
+	/**
+	 * Metodo que busca en el fichero .properties si todos los datos tienen valor y
+	 * devuelve true de ser afirmativo y false de ser negativo
+	 * 
+	 * @return boolean true si se encuentran todos los datos en el properties, false
+	 *         si no
+	 * @throws SiaException
+	 */
 	private static boolean checkBDProperties(String src) throws SiaException {
 		boolean readed = false;
 		try {
@@ -92,6 +117,5 @@ public class PropertiesChecker {
 		}
 		return readed;
 	}
-
 
 }
