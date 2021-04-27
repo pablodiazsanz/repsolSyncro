@@ -92,7 +92,7 @@ public class EmpDb {
 						rset.getString(DatabaseConstants.NAME), rset.getString(DatabaseConstants.SURNAME1),
 						rset.getString(DatabaseConstants.SURNAME2), rset.getString(DatabaseConstants.PHONE),
 						rset.getString(DatabaseConstants.EMAIL), rset.getString(DatabaseConstants.JOB),
-						rset.getDate(DatabaseConstants.HIRING_DATE), rset.getInt(DatabaseConstants.YEAR_SALARY),
+						rset.getTimestamp(DatabaseConstants.HIRING_DATE), rset.getInt(DatabaseConstants.YEAR_SALARY),
 						rset.getBoolean(DatabaseConstants.SICK_LEAVE));
 				employeeList.put(rset.getString(DatabaseConstants.ID), emp);
 

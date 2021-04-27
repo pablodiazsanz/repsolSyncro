@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 
 import repsolSyncro.businessLogic.EmpCompare;
 import repsolSyncro.businessLogic.EmpCsv;
-import repsolSyncro.businessLogic.PropertiesCheker;
+import repsolSyncro.businessLogic.PropertiesChecker;
 import repsolSyncro.constants.PropertyConstants;
 import repsolSyncro.dataAccess.EmpDb;
 import repsolSyncro.entities.EmpTransaction;
@@ -23,7 +23,8 @@ public class MainClass {
 	private static Logger log = Logger.getLogger(MainClass.class);
 
 	private static boolean csvToDatabase = true;
-	private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
+	//private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
+	private static String PropertiesPath = "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
 
 	public static void main(String[] args) {
 		EmpCsv empCsv = new EmpCsv();
@@ -35,7 +36,7 @@ public class MainClass {
 			if(csvToDatabase) {
 				seguir = EmpDb.tryConnection(allProperties);
 			}
-			if (seguir && PropertiesCheker.checker(allProperties)) {
+			if (seguir && PropertiesChecker.checker(allProperties)) {
 				
 					// Leer los empleados de un origen
 					// - Leo de un CSV

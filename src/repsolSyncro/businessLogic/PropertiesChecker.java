@@ -11,9 +11,9 @@ import repsolSyncro.constants.PropertyConstants;
 import repsolSyncro.exceptions.SiaException;
 import repsolSyncro.exceptions.SiaExceptionCodes;
 
-public class PropertiesCheker {
+public class PropertiesChecker {
 	
-	private static Logger log = Logger.getLogger(PropertiesCheker.class);
+	private static Logger log = Logger.getLogger(PropertiesChecker.class);
 	private static String[] ficheros = { PropertyConstants.PATH_SERVER_DB_PROPERTY_FILE,
 			PropertyConstants.PATH_CLIENT_PROPERTY_FILE, PropertyConstants.PATH_SERVER_CSV_PROPERTY_FILE,
 			PropertyConstants.PATH_RESULT_PROPERTY_FILE };
