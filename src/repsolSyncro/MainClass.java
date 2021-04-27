@@ -22,7 +22,7 @@ public class MainClass {
 
 	private static Logger log = Logger.getLogger(MainClass.class);
 
-	private static boolean csvToDatabase = true;
+	private static boolean csvToDatabase;
 	private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
 	//private static String PropertiesPath = "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
 
@@ -33,6 +33,7 @@ public class MainClass {
 			Properties allProperties = new Properties();
 			allProperties.load(ip);
 			boolean seguir = PropertiesChecker.checker(allProperties, csvToDatabase);
+			csvToDatabase = Boolean.parseBoolean(allProperties.getProperty(PropertyConstants.CSV_TO_DATABASE));
 			if(csvToDatabase) {
 				seguir = EmpDb.tryConnection(allProperties);
 			}

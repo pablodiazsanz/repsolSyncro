@@ -12,6 +12,10 @@ package repsolSyncro.constants;
  *				 la columna que equivale al valor en el CSV
  */
 public class PropertyConstants {
+	
+	// eleccion de forma de trabajo
+	public static final String CSV_TO_DATABASE = "DEFAULT.Boolean.PROPERTIES.DB.decision";
+	
 	//direccion de los fichero properties
 	public static final String PATH_CLIENT_PROPERTY_FILE = "DEFAULT.File.PROPERTIES.CSV.client";
 	public static final String PATH_SERVER_DB_PROPERTY_FILE = "DEFAULT.File.PROPERTIES.DB.server";
