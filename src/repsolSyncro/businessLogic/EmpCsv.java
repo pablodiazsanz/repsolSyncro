@@ -27,9 +27,7 @@ public class EmpCsv {
 	// a la clase Csv y luego transformar esos datos en empleados y devolverlos en
 	// forma de HashMap
 	private Logger log = Logger.getLogger(EmpCsv.class);
-	private Properties file = new Properties();
-	private String src;
-	private FileInputStream ip;
+	private Properties file;
 	private String path = "";
 	private String id = "";
 	private String name = "";
@@ -45,6 +43,7 @@ public class EmpCsv {
 	
 	public void setFile(String src) {
 		try {
+			file = new Properties();
 			FileInputStream ip = new FileInputStream(src);
 			file.load(ip);
 			path = file.getProperty(PropertyConstants.CSV_PATH);
@@ -79,6 +78,7 @@ public class EmpCsv {
 	public HashMap<String, Employee> getMap() throws SiaException {
 		HashMap<String, Employee> hm = new HashMap<String, Employee>();
 		// obtenemos la lista de todas las lienas del csv de empleados
+		
 		List<String> csvData = CsvAccess.getData(path);
 		// obtenemos de la primera linea las columnas y su orden
 		// damos por hecho que la primera son las columnas por que asi lo hemos pactado
@@ -152,7 +152,7 @@ public class EmpCsv {
 	private Employee createEmployee(List<String> employeeData, HashMap<Integer, String> columnsOrder)
 			throws ParseException, NumberFormatException {
 		// Declaramos un empleado
-		Employee createdEmployee = null;
+		
 
 		// Creamos todas las variables vacías que posteriormente añadiremos al empleado
 		// creado
@@ -212,7 +212,7 @@ public class EmpCsv {
 			}
 
 		}
-		return createdEmployee;
+		return new Employee(empID, empName, empSurname1, empSurname2, empPhone, empEmail, empJob, empHiringDate, empYearSalary, empSickLeave);
 	}
 
 	/**
@@ -321,6 +321,7 @@ public class EmpCsv {
 		for (EmpTransaction empTransaction : transactionsList) {
 
 			if (empTransaction.getStatus().equals("CREATE") || empTransaction.getStatus().equals("DELETE")) {
+				System.out.println(empTransaction.toString());
 				String line = empTransaction.getEmployee().toCSV() + ";" + empTransaction.getStatus();
 				CsvAccess.writeCSV(line, file.getProperty(PropertyConstants.CSV_PATH));
 

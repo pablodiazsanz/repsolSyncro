@@ -32,4 +32,12 @@ public class EmpTransaction {
 		return employee;
 	}
 
+	@Override
+	public String toString() {
+		return "EmpTransaction [status=" + status + ", employee=" + employee + ", modifiedFields=" + modifiedFields
+				+ "]";
+	}
+	
+	
+
 }

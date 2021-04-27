@@ -26,7 +26,6 @@ public class CsvAccess {
 	 * @throws SiaException 
 	 */
 	public static List<String> getData(String path) throws SiaException {
-		System.out.println(path);
 		File f = new File(path);
 
 		log.trace("Ruta del fichero: " + f.getPath());

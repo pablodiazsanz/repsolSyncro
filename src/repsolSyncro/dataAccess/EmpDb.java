@@ -42,15 +42,16 @@ public class EmpDb {
 	/**
 	 * Comprueba que la conexion a BBDD se realiza correctamente y tambien comprueba
 	 * que los datos del fichero properties del servidor estan corrrectos
+	 * @param allProperties 
 	 * 
 	 * @return true si todo esta bien, false si falla algo
 	 * @throws SiaException
 	 */
-	public static boolean tryConnection() throws SiaException {
+	public static boolean tryConnection(Properties allProperties) throws SiaException {
 		boolean conectado = true;
 		try {
 			file = new Properties();
-			ip = new FileInputStream(PropertyConstants.PATH_SERVER_DB_PROPERTY_FILE);
+			ip = new FileInputStream(allProperties.getProperty(PropertyConstants.PATH_SERVER_DB_PROPERTY_FILE));
 			file.load(ip);
 
 			driver = file.getProperty(PropertyConstants.DB_DRIVER);
@@ -120,14 +121,14 @@ public class EmpDb {
 								.format(empTransaction.getEmployee().getHiringDate())
 						+ "', 'dd/MM/yyyy HH:mm:ss')," + empTransaction.getEmployee().getYearSalary() + ","
 						+ empTransaction.getEmployee().isSickLeave() + ");";
-				DbAccess.executeStatement(query);
+				DbAccess.executeStatement(query, file);
 
 			} else if (empTransaction.getStatus().equals("DELETE")) {
 				String query = "DELETE FROM employee WHERE ID = '" + empTransaction.getEmployee().getId() + "';";
-				DbAccess.executeStatement(query);
+				DbAccess.executeStatement(query, file);
 			} else {
 				String query = getQueryUpdatedEmployee(empTransaction.getEmployee(), empTransaction.getModifiedFields());
-				DbAccess.executeStatement(query);
+				DbAccess.executeStatement(query, file);
 			}
 		}
 	}

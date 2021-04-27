@@ -58,7 +58,7 @@ public class PropertiesCheker {
 			file.getProperty(PropertyConstants.CSV_HEAD_YEAR_SALARY);
 			file.getProperty(PropertyConstants.CSV_HEAD_SICK_LEAVE);
 			readed = true;
-			log.trace("Fichero config de cliente leido exitosamente");
+			log.trace("Fichero config leido exitosamente");
 		} catch (FileNotFoundException e) {
 			log.error("Fichero no encontrado", e);
 			throw new SiaException(SiaExceptionCodes.MISSING_FILE, e);
@@ -81,7 +81,7 @@ public class PropertiesCheker {
 			file.getProperty(PropertyConstants.DB_USERNAME);
 			file.getProperty(PropertyConstants.DB_PASSWORD);
 			readed = true;
-			log.trace("Fichero config de cliente leido exitosamente");
+			log.trace("Fichero config leido exitosamente");
 		} catch (FileNotFoundException e) {
 			log.error("Fichero no encontrado", e);
 			throw new SiaException(SiaExceptionCodes.MISSING_FILE, e);

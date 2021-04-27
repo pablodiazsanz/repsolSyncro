@@ -32,43 +32,12 @@ public class DbAccess {
 	// Contraseña del uisuario que se logea
 	private static String pwd;
 	
-	/**
-	 * Comprueba que la conexion a BBDD se realiza correctamente y tambien comprueba
-	 * que los datos del fichero properties del servidor estan corrrectos
-	 * 
-	 * @return true si todo esta bien, false si falla algo
-	 * @throws SiaException
-	 */
 	
-	public static boolean tryConnection() throws SiaException {
-		boolean conectado = true;
+	public static void executeStatement(String query, Properties file) throws SiaException {
 		try {
-			file = new Properties();
-			ip = new FileInputStream(PropertyConstants.PATH_SERVER_DB_PROPERTY_FILE);
-			file.load(ip);
-			
-			driver = file.getProperty(PropertyConstants.DB_DRIVER);
-			user = file.getProperty(PropertyConstants.DB_USERNAME);
-			pwd = file.getProperty(PropertyConstants.DB_PASSWORD);
-			
-			conn = DriverManager.getConnection(driver, user, pwd);
-			conn.close();
-		} catch (SQLException e) {
-			log.error("Error de conexion a la bbdd");
-			throw new SiaException(SiaExceptionCodes.SQL_ERROR, e);
-		} catch (FileNotFoundException e) {
-			log.error("No se ha encontrado el fichero o este no existe");
-			throw new SiaException(SiaExceptionCodes.MISSING_FILE, e);
-		} catch (IOException e) {
-			log.error("Error de entrada o salida de datos");
-			throw new SiaException(SiaExceptionCodes.IN_OUT, e);
-		}
-		return conectado;
-	}
-
-	public static void executeStatement(String query) throws SiaException {
-		try {
-			conn = DriverManager.getConnection(driver, user, pwd);
+			conn = DriverManager.getConnection(file.getProperty(PropertyConstants.DB_DRIVER),
+					file.getProperty(PropertyConstants.DB_USERNAME), 
+					file.getProperty(PropertyConstants.DB_PASSWORD));
 			log.trace(query);
 			PreparedStatement stmt = conn.prepareStatement(query);
 			stmt.execute();

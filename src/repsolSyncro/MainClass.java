@@ -22,19 +22,24 @@ public class MainClass {
 
 	private static Logger log = Logger.getLogger(MainClass.class);
 
-	private static boolean csvToDatabase = false;
+	private static boolean csvToDatabase = true;
 	private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
 
 	public static void main(String[] args) {
 		EmpCsv empCsv = new EmpCsv();
+		boolean seguir = true;
 		try {
 			FileInputStream ip = new FileInputStream(PropertiesPath);
 			Properties allProperties = new Properties();
 			allProperties.load(ip);
-			if (PropertiesCheker.checker(allProperties)) {
-				// Leer los empleados de un origen
-				// - Leo de un CSV
-				empCsv.setFile(allProperties.getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE));
+			if(csvToDatabase) {
+				seguir = EmpDb.tryConnection(allProperties);
+			}
+			if (seguir && PropertiesCheker.checker(allProperties)) {
+				
+					// Leer los empleados de un origen
+					// - Leo de un CSV
+					empCsv.setFile(allProperties.getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE));
 				HashMap<String, Employee> clientData = empCsv.getMap();
 
 				// Leer mis empleado
@@ -57,11 +62,12 @@ public class MainClass {
 				// - Ejecuto las operaciones
 				// - Genero un CSV con las operaciones
 				// - Ejecuto las operaciones contra la BBDD
-				if (csvToDatabase) {
+				if (!csvToDatabase) {
 					empCsv.setFile(allProperties.getProperty(PropertyConstants.PATH_RESULT_PROPERTY_FILE));
 					empCsv.generateTransactionsCsv(transactionsList);
 				} else {
 					EmpDb.executeTransactions(transactionsList);
+
 				}
 			}
 		} catch (FileNotFoundException e1) {
@@ -72,6 +78,8 @@ public class MainClass {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			log.trace("sacabao");
 		}
 
 	}

@@ -25,15 +25,15 @@ public class PropertyConstants {
 	//contraeña del usuario que logea en BBDD
 	public static final String DB_PASSWORD = "DEFAULT.Database.Password";
 	//direccion del csv a leer o escribir
-	public static final String CSV_PATH = "DEFAULT.File.CSV";
-	public static final String CSV_HEAD_ID = "DEFAULT.File.CSV.head.ID";
-	public static final String CSV_HEAD_NAME = "DEFAULT.File.CSV.head.NAME";
-	public static final String CSV_HEAD_SURNAME1 = "DEFAULT.File.CSV.head.FIRST_SURNAME" ;
-	public static final String CSV_HEAD_SURNAME2 = "DEFAULT.File.CSV.head.SECOND_SURNAME";
-	public static final String CSV_HEAD_PHONE = "DEFAULT.File.CSV.head.PHONE";
-	public static final String CSV_HEAD_EMAIL = "DEFAULT.File.CSV.head.EMAIL";
-	public static final String CSV_HEAD_JOB = "DEFAULT.File.CSV.head.JOB";
-	public static final String CSV_HEAD_HIRING_DATE = "DEFAULT.File.CSV.head.HIRING_DATE";
-	public static final String CSV_HEAD_YEAR_SALARY = "DEFAULT.File.CSV.head.YEAR_SALARY";
-	public static final String CSV_HEAD_SICK_LEAVE = "DEFAULT.File.CSV.head.SICK_LEAVE";
+	public static final String CSV_PATH = "DEFAULT.File.CSV.emp";
+	public static final String CSV_HEAD_ID = "DEFAULT.File.CSV.emp.head.ID";
+	public static final String CSV_HEAD_NAME = "DEFAULT.File.CSV.emp.head.NAME";
+	public static final String CSV_HEAD_SURNAME1 = "DEFAULT.File.CSV.emp.head.FIRST_SURNAME" ;
+	public static final String CSV_HEAD_SURNAME2 = "DEFAULT.File.CSV.emp.head.SECOND_SURNAME";
+	public static final String CSV_HEAD_PHONE = "DEFAULT.File.CSV.emp.head.PHONE";
+	public static final String CSV_HEAD_EMAIL = "DEFAULT.File.CSV.emp.head.EMAIL";
+	public static final String CSV_HEAD_JOB = "DEFAULT.File.CSV.emp.head.JOB";
+	public static final String CSV_HEAD_HIRING_DATE = "DEFAULT.File.CSV.emp.head.HIRING_DATE";
+	public static final String CSV_HEAD_YEAR_SALARY = "DEFAULT.File.CSV.emp.head.YEAR_SALARY";
+	public static final String CSV_HEAD_SICK_LEAVE = "DEFAULT.File.CSV.emp.head.SICK_LEAVE";
 }

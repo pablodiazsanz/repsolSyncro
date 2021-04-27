@@ -75,7 +75,7 @@ public class EmpCompare {
 		log.trace("Empezamos el borrado de usuarios");
 		for (String key : serverData.keySet()) {
 			log.debug("Eliminando al empleado: " + serverData.get(key).toString());
-			empTransaction = new EmpTransaction("DELETE", clientData.get(key));
+			empTransaction = new EmpTransaction("DELETE", serverData.get(key));
 			transactionList.add(empTransaction);
 		}
 		
