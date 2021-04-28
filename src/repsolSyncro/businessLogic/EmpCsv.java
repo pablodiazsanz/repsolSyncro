@@ -54,15 +54,13 @@ public class EmpCsv {
 	// El nombre del campo baja medica de las cabeceras del csv
 	private String sickLeave = "";
 
-	
-	
 	public EmpCsv(String direccion) throws SiaException {
 		String src = "";
-		if(direccion.toLowerCase().equals("client")) {
+		if (direccion.toLowerCase().equals("client")) {
 			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE);
-		} else if(direccion.toLowerCase().equals("server")) {
+		} else if (direccion.toLowerCase().equals("server")) {
 			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_SERVER_CSV_PROPERTY_FILE);
-		} else if(direccion.toLowerCase().equals("result")) {
+		} else if (direccion.toLowerCase().equals("result")) {
 			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_RESULT_PROPERTY_FILE);
 		}
 		try {
@@ -103,16 +101,7 @@ public class EmpCsv {
 		HashMap<String, Employee> hm = new HashMap<String, Employee>();
 
 		// Obtenemos la lista de los datos del csv de empleados
-		List<String> csvData = CsvAccess.getData(path);
-
-		// Obtenemos de la primera linea las columnas y su orden.
-		// Damos por hecho que la primera son las columnas por que
-		// asi lo hemos pactado y normalizado
-
-		HashMap<Integer, String> columnsOrder = getOrderColums(csvData.get(0));
-
-		// Borramos la primera linea para que no nos moleste
-		csvData.remove(0);
+		List<HashMap<String, String>> csvData = CsvAccess.getData(path);
 
 		String employeeID = "NO ID";
 
@@ -123,14 +112,12 @@ public class EmpCsv {
 		for (int i = 0; i < csvData.size(); i++) {
 			try {
 				// Obtenemos los datos de la linea
-				List<String> employeeData = getDataFromLine(csvData.get(i));
-
 				// Obtenemos el id del empleado
-				employeeID = getEmployeeID(employeeData, columnsOrder);
+				employeeID = csvData.get(i).get(id);
 
 				// Añadimos al HashMap el objeto Employee que utiliza de clave el ID de ese
 				// empleado
-				Employee emp = createEmployee(employeeData, columnsOrder);
+				Employee emp = createEmployee(csvData.get(i));
 				hm.put(employeeID, emp);
 
 			} catch (ParseException e) {
@@ -153,183 +140,23 @@ public class EmpCsv {
 		return hm;
 	}
 
-	/**
-	 * Este metodo obtiene la ID de un empleado unicamente a traves de la linea de
-	 * datos sin necesidad de tener uin objeto empleado creado
-	 * 
-	 * @param employeeData datos del empleado
-	 * @param columnsOrder orden de las columnas
-	 * @return String empID con el ID del empleado en cuestion
-	 */
-	private String getEmployeeID(List<String> employeeData, HashMap<Integer, String> columnsOrder) {
-
-		String empID = null;
-
-		for (int i = 0; i < employeeData.size(); i++) {
-			if (columnsOrder.get(i).equals(id)) {
-				empID = employeeData.get(i).trim().toUpperCase();
-
-			}
-		}
-
-		return empID;
-	}
-
-	/**
-	 * Crea un objeto empleado a traves de su List<String> de datos y el orden de
-	 * las columnas
-	 * 
-	 * @param employeeData datos del empleado
-	 * @param columnsOrder orden de las columnas
-	 * @return Employee Con los datos del empleado
-	 * @throws ParseException        Se da en caso de que se parsee la fecha
-	 * @throws NumberFormatException Se da en caso de que se parsee el salario
-	 */
-	private Employee createEmployee(List<String> employeeData, HashMap<Integer, String> columnsOrder)
-			throws ParseException, NumberFormatException {
-		// Declaramos un empleado
-
-		// Creamos todas las variables vacías que posteriormente añadiremos al empleado
-		// creado
-		String empID = "", empName = "", empSurname1 = "", empSurname2 = "", empPhone = "", empEmail = "", empJob = "";
+	private Employee createEmployee(HashMap<String, String> empData) throws ParseException, NumberFormatException {
 		Date empHiringDate = null;
 		int empYearSalary = -1;
 		boolean empSickLeave = false;
 
-		/*
-		 * En este bucle for, vamos a ir recorriendo la lista de los datos que hemos
-		 * sacado de la linea. Al recorrer el dato, se le irá preguntando que nombre de
-		 * columna posee y comparandola con el nombre de columna que tenemos nosotros en
-		 * el servidor para asi obtener los datos y meterlos correctamente en el
-		 * empleado que creamos.
-		 */
-		for (int i = 0; i < employeeData.size(); i++) {
-			if (columnsOrder.get(i).equals(id)) {
-				empID = employeeData.get(i).trim().toUpperCase();
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		formatter.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
+		empHiringDate = formatter.parse(empData.get(hiringDate));
+		// Aqui formateamos el salario anual a numero entero
+		System.out.println(empData.get(yearSalary));
+		empYearSalary = Integer.parseInt(empData.get(yearSalary));
+		//
+		empSickLeave = Boolean.parseBoolean(empData.get(sickLeave));
 
-			} else if (columnsOrder.get(i).equals(name)) {
-				empName = employeeData.get(i).trim();
-
-			} else if (columnsOrder.get(i).equals(surname1)) {
-				empSurname1 = employeeData.get(i).trim();
-
-			} else if (columnsOrder.get(i).equals(surname2)) {
-				empSurname2 = employeeData.get(i).trim();
-
-			} else if (columnsOrder.get(i).equals(phone)) {
-				empPhone = employeeData.get(i).trim();
-
-			} else if (columnsOrder.get(i).equals(email)) {
-				empEmail = employeeData.get(i).trim();
-
-			} else if (columnsOrder.get(i).equals(job)) {
-				empJob = employeeData.get(i).trim();
-
-			} else if (columnsOrder.get(i).equals(hiringDate)) {
-				/*
-				 * Aquí formateamos la cadena obtenida, que en el caso ideal es una fecha, a un
-				 * tipo Date
-				 */
-				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-				formatter.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
-
-				empHiringDate = formatter.parse(employeeData.get(i));
-
-			} else if (columnsOrder.get(i).equals(yearSalary)) {
-				// Aqui formateamos el salario anual a numero entero
-				empYearSalary = Integer.parseInt(employeeData.get(i));
-
-			} else if (columnsOrder.get(i).equals(sickLeave)) {
-				if (employeeData.get(i).equals("true")) {
-					empSickLeave = true;
-
-				}
-			}
-
-		}
-		return new Employee(empID, empName, empSurname1, empSurname2, empPhone, empEmail, empJob, empHiringDate,
-				empYearSalary, empSickLeave);
-	}
-
-	/**
-	 * Separa el string de una linea en una List<String> de datos en el orden en el
-	 * que se encuentre en la linea
-	 * 
-	 * @param line a trocear
-	 * @return List<String> con los datos en el orden en que estan escritos
-	 */
-	private List<String> getDataFromLine(String line) {
-		// Creamos un ArrayList para obtener los datos de la linea
-		List<String> employeeData = new ArrayList<String>();
-
-		// Añadimos el primer dato
-		employeeData.add("");
-
-		// Utilizamos este booleano para saber si abrimos o cerramos las comillas
-		boolean openQuotes = false;
-
-		// Utilizamos un valor auxiliar para saber cuando cambiamos de dato
-		int employeeValue = 0;
-
-		// Con este bucle for recorremos caracter por caracter para sacar los datos uno
-		// a uno
-		for (int i = 0; i < line.length(); i++) {
-
-			/*
-			 * Aqui observo si el caracter es una comilla. Si lo es, hago una comprobación
-			 * para saber si inicio el dato o lo finalizo
-			 */
-			if (line.charAt(i) == '"') {
-				if (openQuotes) {
-					openQuotes = false;
-				} else {
-					openQuotes = true;
-				}
-			}
-
-			/*
-			 * Aqui decido si hay un cambio de valor o si no lo hay. Si lo hay, añado un
-			 * nuevo valor vacio al ArrayList, y si no lo hay, sumo lo que contiene el valor
-			 * del ArrayList actual a lo existente
-			 */
-			if (line.charAt(i) == ';' && openQuotes == false) {
-				employeeValue++;
-				log.trace("[" + employeeData.get(0).trim().toUpperCase() + "] - " + employeeData.toString());
-				employeeData.add("");
-
-				// Aquí compruebo que si no hay nada en ese dato, me ponga en valor del
-				// ArrayList que es un valor nulo
-				if (employeeData.get(employeeValue - 1).length() == 0) {
-					employeeData.set(employeeValue - 1, "NULL");
-				}
-
-			} else {
-				employeeData.set(employeeValue, employeeData.get(employeeValue) + line.charAt(i));
-			}
-
-			if (i == line.length() - 1) {
-				log.trace("[" + employeeData.get(0).trim().toUpperCase() + "] - " + employeeData.toString());
-			}
-
-		}
-
-		return employeeData;
-	}
-
-	/**
-	 * Obtiene un HashMap<Integer, String> con el nombre de las columnas en el valor
-	 * y la posicion en la que se encuentran en el csv en la key
-	 * 
-	 * @param lineColums linea con en nombre de las columnas del csv
-	 * @return HashMap<Integer, String> con las columnas ordenadas
-	 */
-	private HashMap<Integer, String> getOrderColums(String lineColums) {
-		String[] columnsTitle = lineColums.split(";");
-		HashMap<Integer, String> columnsOrder = new HashMap<Integer, String>();
-		for (int i = 0; i < columnsTitle.length; i++) {
-			columnsOrder.put(i, columnsTitle[i]);
-		}
-		return columnsOrder;
+		return new Employee(empData.get(id), empData.get(name), empData.get(surname1), empData.get(surname2),
+				empData.get(hiringDate), empData.get(email), empData.get(job), empHiringDate, empYearSalary,
+				empSickLeave);
 	}
 
 	/**

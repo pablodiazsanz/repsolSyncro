@@ -41,7 +41,7 @@ public class MainClass {
 
 				// Leer los empleados de un origen
 				// - Leo de un CSV
-				EmpCsv empCsvCliente = new EmpCsv("cliente");
+				EmpCsv empCsvCliente = new EmpCsv("client");
 				HashMap<String, Employee> clientData = empCsvCliente.getMap();
 
 				// Leer mis empleado
