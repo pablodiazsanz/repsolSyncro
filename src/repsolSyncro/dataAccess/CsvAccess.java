@@ -23,7 +23,7 @@ public class CsvAccess {
 	 * Devuleve un List<String> con todas las lineas del csv pedido
 	 * 
 	 * @param path ruta del fichero csv a leer
-	 * @return Lis<String> con las lineas leidas
+	 * @return List<String> con las lineas leidas
 	 * @throws SiaException
 	 */
 	public static List<HashMap<String, String>> getData(String path) throws SiaException {

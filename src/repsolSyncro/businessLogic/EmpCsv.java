@@ -149,7 +149,7 @@ public class EmpCsv {
 		formatter.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
 		empHiringDate = formatter.parse(empData.get(hiringDate));
 		// Aqui formateamos el salario anual a numero entero
-		System.out.println(empData.get(yearSalary));
+		
 		empYearSalary = Integer.parseInt(empData.get(yearSalary));
 		//
 		empSickLeave = Boolean.parseBoolean(empData.get(sickLeave));

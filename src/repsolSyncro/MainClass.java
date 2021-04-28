@@ -41,7 +41,7 @@ public class MainClass {
 
 				// Leer los empleados de un origen
 				// - Leo de un CSV
-				EmpCsv empCsvCliente = new EmpCsv("client");
+				EmpCsv empCsvCliente = new EmpCsv("CLIENT");
 				HashMap<String, Employee> clientData = empCsvCliente.getMap();
 
 				// Leer mis empleado
@@ -52,7 +52,7 @@ public class MainClass {
 					serverData = EmpDb.getMap();
 
 				} else {
-					EmpCsv empCsvServer = new EmpCsv("server");
+					EmpCsv empCsvServer = new EmpCsv("SERVER");
 					serverData = empCsvServer.getMap();
 				}
 
@@ -65,7 +65,7 @@ public class MainClass {
 				// - Genero un CSV con las operaciones
 				// - Ejecuto las operaciones contra la BBDD
 				if (!csvToDatabase) {
-					EmpCsv empCsvResult = new EmpCsv("result");
+					EmpCsv empCsvResult = new EmpCsv("RESULT");
 					empCsvResult.generateTransactionsCsv(transactionsList);
 				} else {
 					EmpDb.executeTransactions(transactionsList);
