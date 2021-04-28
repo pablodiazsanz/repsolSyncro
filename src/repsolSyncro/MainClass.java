@@ -13,8 +13,9 @@ import repsolSyncro.exceptions.SiaException;
 
 public class MainClass {
 
+	// logger de la clase
 	private static Logger log = Logger.getLogger(MainClass.class);
-
+	// booleano que nos dice si el programa trabaja conta BBDD o solo con csv
 	private static boolean csvToDatabase;
 		
 	/**
