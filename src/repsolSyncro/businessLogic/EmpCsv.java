@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,8 +27,9 @@ import repsolSyncro.exceptions.SiaExceptionCodes;
  * 
  */
 public class EmpCsv {
-
+	//este es el loguer de la clase que vamos a utilizar en esta clase
 	private Logger log = Logger.getLogger(EmpCsv.class);
+	//objeto que apunta al properties que nos interese
 	private Properties file;
 	// El path que obtenemos de las propiedades
 	private String path = "";
@@ -54,7 +54,15 @@ public class EmpCsv {
 	// El nombre del campo baja medica de las cabeceras del csv
 	private String sickLeave = "";
 
+	/**
+	 * Constructor de la clase que lee los ficheros csv de empleadoA,
+	 * se le pasa por parametro a donde quieres que apunte.
+	 * 
+	 * @param direccion Fichero csv al que apunta, client, server o result segun convenga
+	 * @throws SiaException
+	 */
 	public EmpCsv(String direccion) throws SiaException {
+		//aqui declaramos y seleccionamos a que direcio0n va a puntar el properties para leer los elementos segun nos interese
 		String src = "";
 		if (direccion.toLowerCase().equals("client")) {
 			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE);
@@ -64,9 +72,11 @@ public class EmpCsv {
 			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_RESULT_PROPERTY_FILE);
 		}
 		try {
+			//cargamos el archivo una vez elegido a donde apunta nuestro objeto
 			file = new Properties();
 			FileInputStream ip = new FileInputStream(src);
 			file.load(ip);
+			//cargamos los datos de properties en variables de la clase
 			path = file.getProperty(PropertyConstants.CSV_PATH);
 			id = file.getProperty(PropertyConstants.CSV_HEAD_ID);
 			name = file.getProperty(PropertyConstants.CSV_HEAD_NAME);
@@ -140,18 +150,25 @@ public class EmpCsv {
 		return hm;
 	}
 
+	/**
+	 * Metodo que crea el objeto empleado a partir de la su coleccion de datos extraida del csv
+	 * 
+	 * @param empData HashMap<String, String> con los datos del empleado, la key es la columna
+	 * @return Employee con los datos del empleado
+	 * @throws ParseException en caso de error en HiringDate, o en SickLeave
+	 * @throws NumberFormatException en caso de error en el YearSalary
+	 */
 	private Employee createEmployee(HashMap<String, String> empData) throws ParseException, NumberFormatException {
 		Date empHiringDate = null;
 		int empYearSalary = -1;
 		boolean empSickLeave = false;
-
+		//parseamos la fecha de striong a objeto Date
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		formatter.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
 		empHiringDate = formatter.parse(empData.get(hiringDate));
 		// Aqui formateamos el salario anual a numero entero
-		
 		empYearSalary = Integer.parseInt(empData.get(yearSalary));
-		//
+		//Parseamos el boleano de la baja
 		empSickLeave = Boolean.parseBoolean(empData.get(sickLeave));
 
 		return new Employee(empData.get(id), empData.get(name), empData.get(surname1), empData.get(surname2),

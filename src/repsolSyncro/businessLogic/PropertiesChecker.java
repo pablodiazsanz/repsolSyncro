@@ -12,7 +12,7 @@ import repsolSyncro.exceptions.SiaException;
 import repsolSyncro.exceptions.SiaExceptionCodes;
 
 public class PropertiesChecker {
-
+	// loguer de la clase
 	private static Logger log = Logger.getLogger(PropertiesChecker.class);
 	// array con las direcciones de los ficheros si trabajamos todo en csv
 	private static String[] ficherosCsvToCsv = { PropertyConstants.PATH_CLIENT_PROPERTY_FILE,
@@ -21,11 +21,13 @@ public class PropertiesChecker {
 	private static String[] ficherosCsvToBD = { PropertyConstants.PATH_SERVER_DB_PROPERTY_FILE,
 			PropertyConstants.PATH_CLIENT_PROPERTY_FILE, PropertyConstants.PATH_RESULT_PROPERTY_FILE };
 	// ruta al fichero con todos los properties
-	private static String PropertiesPath = "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
-	//private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
+	// private static String PropertiesPath =
+	// "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
+	private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
 	// eleccion de manera de trabajo
 	private static boolean csvToDatabase;
-	//
+	// fichero properties del programa que gusrada los datos generales,
+	// incluye direcciones al resto de properties y forma de trabajo seleccionada
 	private static Properties allProperties;
 
 	/**
@@ -69,10 +71,20 @@ public class PropertiesChecker {
 		return valido;
 	}
 
+	/**
+	 * devuelve el valos booleano del properties para conocer el metodo de trabajo del programa
+	 * 
+	 * @return Boolean
+	 */
 	public static boolean getCsvToDatabase() {
 		return csvToDatabase;
 	}
-	
+
+	/**
+	 * devuelve el fichero de properties general
+	 * 
+	 * @return Properties
+	 */
 	public static Properties getAllProperties() {
 		return allProperties;
 	}
