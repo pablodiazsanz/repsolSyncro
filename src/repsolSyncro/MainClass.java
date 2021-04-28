@@ -29,10 +29,12 @@ public class MainClass {
 		try {
 			// Comprobamos si las propiedades estan completas
 			boolean checkAndGo = PropertiesChecker.checker();
+			// recogemos si trabajamos contra BBDD o solo CSV
 			csvToDatabase = PropertiesChecker.getCsvToDatabase();
 
 			// Comprobamos si queremos sincronizar con la base de datos o con csv
 			if (csvToDatabase) {
+				//comprobamos que la base de datos estas disponible
 				checkAndGo = EmpDb.tryConnection();
 			}
 
@@ -45,8 +47,8 @@ public class MainClass {
 				HashMap<String, Employee> clientData = empCsvCliente.getMap();
 
 				// Leer mis empleado
-				// - Leer de un CSV
-				// - Leer de base datos
+				// false - Leer de un CSV
+				// true - Leer de base datos
 				HashMap<String, Employee> serverData;
 				if (csvToDatabase) {
 					serverData = EmpDb.getMap();
@@ -62,8 +64,8 @@ public class MainClass {
 
 				// Ejecutar las operaciones de sincronizacion
 				// - Ejecuto las operaciones
-				// - Genero un CSV con las operaciones
-				// - Ejecuto las operaciones contra la BBDD
+				// false - Genero un CSV con las operaciones
+				// true - Ejecuto las operaciones contra la BBDD
 				if (!csvToDatabase) {
 					EmpCsv empCsvResult = new EmpCsv("RESULT");
 					empCsvResult.generateTransactionsCsv(transactionsList);

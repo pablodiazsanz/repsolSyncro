@@ -19,7 +19,7 @@ public class PropertiesChecker {
 			PropertyConstants.PATH_SERVER_CSV_PROPERTY_FILE, PropertyConstants.PATH_RESULT_PROPERTY_FILE };
 	// array con las direcciones de los ficheros si trabajamos contra BBDD
 	private static String[] ficherosCsvToBD = { PropertyConstants.PATH_SERVER_DB_PROPERTY_FILE,
-			PropertyConstants.PATH_CLIENT_PROPERTY_FILE, PropertyConstants.PATH_RESULT_PROPERTY_FILE };
+			PropertyConstants.PATH_CLIENT_PROPERTY_FILE };
 	// ruta al fichero con todos los properties
 	// private static String PropertiesPath =
 	// "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
@@ -55,11 +55,17 @@ public class PropertiesChecker {
 		csvToDatabase = Boolean.parseBoolean(allProperties.getProperty(PropertyConstants.CSV_TO_DATABASE));
 		boolean valido = true;
 		String[] ficheros = {};
+		// seleccionamos que ficheros properties y que datos deseamos leer
+		// false - csv de cliente y servidor y resultado
+		// true -  csv de cliente, y acceso a BBDD para servidor y resultado
 		if (csvToDatabase) {
 			ficheros = ficherosCsvToBD;
 		} else {
 			ficheros = ficherosCsvToCsv;
 		}
+		//recorremos y seleccionamos que metodo deseamos para comprobar los properties
+		//si contienen la palabra csv en la "variable" del properties iran a comprobarse con
+		//	el metodo de los csv, si no iran a BBDD
 		for (int i = 0; i < ficheros.length; i++) {
 			if (ficheros[i].contains("CSV")) {
 				valido = checkCsvProperties(allProperties.getProperty(ficheros[i]));
@@ -98,11 +104,15 @@ public class PropertiesChecker {
 	 * @throws SiaException
 	 */
 	private static boolean checkCsvProperties(String src) throws SiaException {
+		//iniciamos el booleano de respuesta en false dando por hecho que fracasara y solo pasandolo a true
+		//si se dan todas las condiciones
 		boolean readed = false;
 		try {
+			//leemos la ruta del archivo
 			Properties file = new Properties();
 			FileInputStream ip = new FileInputStream(src);
 			file.load(ip);
+			//leemos los datos comprobando que no falta ninguno
 			file.getProperty(PropertyConstants.CSV_PATH);
 			file.getProperty(PropertyConstants.CSV_HEAD_ID);
 			file.getProperty(PropertyConstants.CSV_HEAD_NAME);
@@ -114,6 +124,7 @@ public class PropertiesChecker {
 			file.getProperty(PropertyConstants.CSV_HEAD_HIRING_DATE);
 			file.getProperty(PropertyConstants.CSV_HEAD_YEAR_SALARY);
 			file.getProperty(PropertyConstants.CSV_HEAD_SICK_LEAVE);
+			//solo se pasa a true en caso de que pase por todos los datos del fichero properties
 			readed = true;
 			log.trace("Fichero config leido exitosamente");
 		} catch (FileNotFoundException e) {
@@ -136,15 +147,20 @@ public class PropertiesChecker {
 	 * @throws SiaException
 	 */
 	private static boolean checkBDProperties(String src) throws SiaException {
+		//iniciamos el booleano de respuesta en false dando por hecho que fracasara y solo pasandolo a true
+		//si se dan todas las condiciones
 		boolean readed = false;
 		try {
+			//leemos la ruta del archivo
 			Properties file = new Properties();
 			System.out.println(src);
 			FileInputStream ip = new FileInputStream(src);
 			file.load(ip);
+			//leemos los datos comprobando que no falta ninguno
 			file.getProperty(PropertyConstants.DB_DRIVER);
 			file.getProperty(PropertyConstants.DB_USERNAME);
 			file.getProperty(PropertyConstants.DB_PASSWORD);
+			//solo se pasa a true en caso de que pase por todos los datos del fichero properties
 			readed = true;
 			log.trace("Fichero config leido exitosamente");
 		} catch (FileNotFoundException e) {
