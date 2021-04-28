@@ -2,12 +2,14 @@ package repsolSyncro.exceptions;
 
 public class SiaExceptionCodes {
 
+	// Error no concretado
+	public static final String GENERIC = "000";
 	// El dato de fecha que obtenemos no tiene un formato correcto.
 	public static final String PARSE_DATE = "001";
-	// 
+	//
 	public static final String NULL_POINTER = "002";
 	// El dato que estamos obteniendo no es un numero.
-	public static final String NUMBER_FORMAT  = "003";
+	public static final String NUMBER_FORMAT = "003";
 	// Falta de columnas a la hora de buscar los datos en una linea.
 	public static final String COLUMN_LESS = "004";
 	// El fichero al que estás apuntando no existe o no se encuentra.
