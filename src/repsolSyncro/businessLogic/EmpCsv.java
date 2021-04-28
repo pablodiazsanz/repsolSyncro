@@ -155,7 +155,7 @@ public class EmpCsv {
 		empSickLeave = Boolean.parseBoolean(empData.get(sickLeave));
 
 		return new Employee(empData.get(id), empData.get(name), empData.get(surname1), empData.get(surname2),
-				empData.get(hiringDate), empData.get(email), empData.get(job), empHiringDate, empYearSalary,
+				empData.get(phone), empData.get(email), empData.get(job), empHiringDate, empYearSalary,
 				empSickLeave);
 	}
 

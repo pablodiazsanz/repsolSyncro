@@ -120,8 +120,9 @@ public class CsvAccess {
 			if (line.charAt(i) == ';' && openQuotes == false) {
 				// Aquí compruebo que si no hay nada en ese dato, me ponga en valor del
 				// ArrayList que es un valor nulo
-				if (columData.length() == 0) {
-					columsLine.put(columnsLine.get(columValue - 1), "NULL");
+				if (line.charAt(i-1) == ';') {
+					columsLine.put(columnsLine.get(columValue), "NULL");
+					columValue++;
 				} else {
 					log.trace("[" + columData.trim().toUpperCase() + "] - " + columData.toString());
 					columsLine.put(columnsLine.get(columValue), columData);

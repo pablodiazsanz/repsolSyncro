@@ -21,8 +21,8 @@ public class PropertiesChecker {
 	private static String[] ficherosCsvToBD = { PropertyConstants.PATH_SERVER_DB_PROPERTY_FILE,
 			PropertyConstants.PATH_CLIENT_PROPERTY_FILE, PropertyConstants.PATH_RESULT_PROPERTY_FILE };
 	// ruta al fichero con todos los properties
-	// private static String PropertiesPath = "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
-	private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
+	private static String PropertiesPath = "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
+	//private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
 	// eleccion de manera de trabajo
 	private static boolean csvToDatabase;
 	//
