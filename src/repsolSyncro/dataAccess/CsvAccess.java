@@ -68,7 +68,7 @@ public class CsvAccess {
 			// Leemos la primera linea, que es la informacion de las columnas, y obtenemos
 			// los datos que son los títulos de cada columna.
 			String line = br.readLine();
-			HashMap<Integer, String> columnsLine = obtenerColumnas(line);
+			HashMap<Integer, String> columnsLine = getColumns(line);
 			log.trace("Columnas del fichero: " + columnsLine);
 
 			// Inicializamos el lineList como un ArrayList
@@ -144,7 +144,7 @@ public class CsvAccess {
 	 * queremos que cada valor que obtenemos de la linea tenga de clave el titulo de
 	 * la columna, cogemos los datos de las columnas obtenidos por parametro y se lo
 	 * añadimos al HashMap con el valor. Para obtener los valores, recorremos la
-	 * linea caracter a caracter y vamos analizandolos.Finalmente, devolvemos los
+	 * linea caracter a caracter y vamos analizandolos. Finalmente, devolvemos los
 	 * datos separados.
 	 * 
 	 * @param line       La linea que se obtiene del fichero
@@ -181,8 +181,10 @@ public class CsvAccess {
 			if (line.charAt(i) == '"') {
 				if (openQuotes) {
 					openQuotes = false;
+
 				} else {
 					openQuotes = true;
+
 				}
 			}
 
@@ -222,107 +224,149 @@ public class CsvAccess {
 
 		// Añadimos el último valor con su clave y devolvemos el HashMap
 		lineMap.put(columnLine.get(columnPosition), value);
+		log.trace("Valor añadido al HashMap: [" + columnLine.get(columnPosition) + ", " + value + "]");
+
 		return lineMap;
 
 	}
 
 	/**
-	 * En este método obtenemos la informacion de las columnas y las devolvemos con la posicion y el nombre que obtenemos
+	 * En este método obtenemos la informacion de la cabecera y las devolvemos con
+	 * la posicion y el nombre que obtenemos de cada una de las columnas. En la
+	 * cabecera tambien comprobamos si algun valor tiene el separador (;).
 	 * 
-	 * @param line
-	 * @return
+	 * @param line Traemos la primera linea del código para obtener la informacion
+	 *             de las columnas.
+	 * @return El HashMap con la posicion y el nombre de cada columna.
 	 */
-	private static HashMap<Integer, String> obtenerColumnas(String line) {
-		// Creamos un HashMap para obtener los datos de la linea
-		HashMap<Integer, String> columsLine = new HashMap<Integer, String>();
-		String columData = "";
+	private static HashMap<Integer, String> getColumns(String line) {
+
+		log.trace("Entramos en el método getColumns(line)");
+
+		// Creamos un HashMap para obtener los datos de la cabecera
+		HashMap<Integer, String> columnsLine = new HashMap<Integer, String>();
+
+		// Aqui guardamos el valor de la columna
+		String columnValue = "";
+
 		// Utilizamos este booleano para saber si abrimos o cerramos las comillas
 		boolean openQuotes = false;
 
-		// Utilizamos un valor auxiliar para saber cuando cambiamos de dato
-		int columValue = 0;
+		// Utilizamos un valor auxiliar para saber en que columna estamos.
+		int columnPosition = 0;
 
-		// Con este bucle for recorremos caracter por caracter para sacar los datos uno
-		// a uno
+		// Con este bucle for recorremos caracter por caracter para analizar caracter
+		// por caracter y obtener os distintos valores con su posicion
 		for (int i = 0; i < line.length(); i++) {
 
 			/*
 			 * Aqui observo si el caracter es una comilla. Si lo es, hago una comprobación
-			 * para saber si inicio el dato o lo finalizo
+			 * para saber si inicio el valor o lo finalizo
 			 */
 			if (line.charAt(i) == '"') {
 				if (openQuotes) {
 					openQuotes = false;
+
 				} else {
 					openQuotes = true;
+
 				}
 			}
 
 			/*
-			 * Aqui decido si hay un cambio de valor o si no lo hay. Si lo hay, añado un
-			 * nuevo valor vacio al ArrayList, y si no lo hay, sumo lo que contiene el valor
-			 * del ArrayList actual a lo existente
+			 * Aqui decido si hay un cambio de valor o si no lo hay. Si no lo hay, sumo el
+			 * caracter a columnValue, y si lo hay, compruebo si el valor es nulo o si lo
+			 * añado segun lo tenga.
 			 */
 			if (line.charAt(i) == ';' && openQuotes == false) {
-				// Aquí compruebo que si no hay nada en ese dato, me ponga en valor del
-				// ArrayList que es un valor nulo
-				if (columData.length() == 0) {
-					columsLine.put(columValue, "NULL");
+				// Aquí compruebo que si no hay nada en ese dato, me ponga el valor como nulo.
+				// En ambos casos, lo añadimos al HashMap. Creo la variable mapValue para añadir
+				// un valor u otro.
+				String mapValue;
+
+				if (line.charAt(i - 1) == ';') {
+					mapValue = "NULL";
+
 				} else {
-					log.trace("[" + columData.trim().toUpperCase() + "] - " + columData.toString());
-					columsLine.put(columValue, columData);
-					columValue++;
-					columData = "";
+					mapValue = columnValue;
+
 				}
 
+				// Añadimos al mapa la clave y el valor
+				columnsLine.put(columnPosition, mapValue);
+				log.trace("Valor añadido al HashMap: [" + columnPosition + ", " + mapValue + "]");
+
+				// Cambiamos la posición y establecemos la cadena columnValue vacia
+				columnPosition++;
+				columnValue = "";
+
 			} else {
-				columData += line.charAt(i);
+				// Añadimos el caracter a la cadena columnValue
+				columnValue += line.charAt(i);
 			}
-
-			if (i == line.length() - 1) {
-				log.trace("[" + columData.trim().toUpperCase() + "] - " + columData.toString());
-			}
-
 		}
-		columsLine.put(columValue, columData);
-		return columsLine;
+
+		// Añadimos el último valor con su clave y devolvemos el HashMap
+		columnsLine.put(columnPosition, columnValue);
+		log.trace("Valor añadido al HashMap: [" + columnPosition + ", " + columnValue + "]");
+
+		return columnsLine;
 
 	}
 
 	/**
-	 * Este metodo crea o sobreescribe el fichero result.csv para guardar la
-	 * información final.
+	 * Este método crea o sobreescribe un fichero CSV con la información de la
+	 * cabecera.
 	 * 
+	 * @param line      La linea con los datos de la cabecera.
+	 * @param writePath El path de donde se encuentra el fichero.
 	 * @throws SiaException
 	 */
 	public static void createCSV(String line, String writePath) throws SiaException {
+
 		try {
+			// Cogemos el fichero para escribirlo, y no le marcamos como true el parametro
+			// de añadir información, asi borra todo si existe y sino lo crea
 			FileWriter fw = new FileWriter(writePath);
+
+			// Escribimos la linea
 			fw.write(line);
+
 			fw.close();
-			log.trace(fw);
+			log.debug("Fichero creado con cabecera: [" + line + "]");
+
 		} catch (IOException e) {
 			String message = "Fallo al escribir la información de la cabecera";
 			throw new SiaException(SiaExceptionCodes.IN_OUT, message, e);
+
 		}
+
 	}
 
 	/**
-	 * Metodo usado para añadir una linea de datos al archivo CSV de resultados
-	 *
-	 * @param EmpTransaction El empleado que queremos añadir con su status
-	 * @param path           direccion que recibimos para escribir
+	 * Este método añade lineas a un fichero CSV
+	 * 
+	 * @param csvLinea La linea que le queremos añadir al fichero
+	 * @param path     El path de dónde se encuentra el fichero
 	 * @throws SiaException
 	 */
 	public static void writeCSV(String csvLinea, String path) throws SiaException {
+
 		try {
+			// Cogemos el fichero para escribirlo, y le marcamos como true el parametro
+			// de añadir información, para asi añadirle los datos a la siguiente linea.
 			FileWriter fw = new FileWriter(path, true);
+			
+			// Añadimos la linea al fichero 
 			fw.write("\n" + csvLinea);
 			fw.close();
-			log.info("[" + csvLinea + "]");
+			
+			log.debug("Linea añadida: [" + csvLinea + "]");
+			
 		} catch (IOException e) {
 			String message = "[" + csvLinea + "] - Fallo al escribir al usuario";
 			throw new SiaException(SiaExceptionCodes.IN_OUT, message, e);
+			
 		}
 	}
 }

@@ -1,11 +1,11 @@
 package repsolSyncro.constants;
+
 /**
- * valores constantes que responden a las columnas de la BBDD
+ * Valores constantes que responden a las columnas de la BBDD
  * 
- * El nombre de las constantes es indetico al nombre de la BBDD y el valor numerico corresponde a la posiciopn de la columna
+ * El nombre de las constantes es identico al nombre de la BBDD y el valor numerico corresponde a la posicion de la columna
  * 
  * NOTA: los valores de columnas en BBDD empiezan en 1
- * 
  */
 public class DatabaseConstants {
 	

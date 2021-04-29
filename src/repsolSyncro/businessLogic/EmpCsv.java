@@ -27,9 +27,10 @@ import repsolSyncro.exceptions.SiaExceptionCodes;
  * 
  */
 public class EmpCsv {
-	// este es el loguer de la clase que vamos a utilizar en esta clase
+
+	// Logger para poder escribir las trazas del codigo en los logs
 	private Logger log = Logger.getLogger(EmpCsv.class);
-	// objeto que apunta al properties que nos interese
+	// Objeto que apunta al properties que nos interese
 	private Properties file;
 	// El path que obtenemos de las propiedades
 	private String path = "";
@@ -58,29 +59,32 @@ public class EmpCsv {
 	 * Constructor de la clase que lee los ficheros csv de empleadoA, se le pasa por
 	 * parametro a donde quieres que apunte.
 	 * 
-	 * @param direccion Fichero csv al que apunta, client, server o result segun
-	 *                  convenga
+	 * @param fileName Fichero csv al que apunta, client, server o result segun
+	 *                 convenga
 	 * @throws SiaException
 	 */
-	public EmpCsv(String direccion) throws SiaException {
-		// aqui declaramos y seleccionamos a que direcio0n va a puntar el properties
+	public EmpCsv(String fileName) throws SiaException {
+		// Aqui declaramos y seleccionamos a que direccion va a puntar el properties
 		// para leer los elementos segun nos interese
 		String src = "";
-		log.trace("accedemos al fichero de: " + direccion);
-		if (direccion.toLowerCase().equals("client")) {
+		log.trace("Accedemos al fichero de: " + fileName);
+
+		if (fileName.toLowerCase().equals("client")) {
 			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE);
-		} else if (direccion.toLowerCase().equals("server")) {
+		} else if (fileName.toLowerCase().equals("server")) {
 			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_SERVER_CSV_PROPERTY_FILE);
-		} else if (direccion.toLowerCase().equals("result")) {
+		} else if (fileName.toLowerCase().equals("result")) {
 			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_RESULT_PROPERTY_FILE);
 		}
-		log.trace("se carga el fichero: " + src);
+		log.trace("Se carga el fichero: [" + src + "]");
+
 		try {
-			// cargamos el archivo una vez elegido a donde apunta nuestro objeto
+			// Cargamos el archivo una vez elegido a donde apunta nuestro objeto
 			file = new Properties();
 			FileInputStream ip = new FileInputStream(src);
 			file.load(ip);
-			// cargamos los datos de properties en variables de la clase
+
+			// Cargamos los datos de properties en variables de la clase
 			path = file.getProperty(PropertyConstants.CSV_PATH);
 			id = file.getProperty(PropertyConstants.CSV_HEAD_ID);
 			name = file.getProperty(PropertyConstants.CSV_HEAD_NAME);
@@ -92,7 +96,8 @@ public class EmpCsv {
 			hiringDate = file.getProperty(PropertyConstants.CSV_HEAD_HIRING_DATE);
 			yearSalary = file.getProperty(PropertyConstants.CSV_HEAD_YEAR_SALARY);
 			sickLeave = file.getProperty(PropertyConstants.CSV_HEAD_SICK_LEAVE);
-			log.trace("se cargan los datos del fichero: " + src);
+			log.trace("Se cargan los datos del fichero: " + src);
+
 		} catch (FileNotFoundException e) {
 			String message = "fichero " + src + " no encontrado";
 			throw new SiaException(SiaExceptionCodes.MISSING_FILE, message, e);
@@ -135,23 +140,23 @@ public class EmpCsv {
 				hm.put(employeeID, emp);
 
 			} catch (ParseException e) {
-				log.error("ID: [" + employeeID + "] - NºLinea: (" + i + ") - Fichero: \"" + path + "\" - Linea: {"
-						+ csvData.get(i) + "}\n No se ha podido crear el objeto empleado.", e);
 				hm.put(employeeID, null);
-				String message = "error de lectura de fecha";
+
+				String message = "ID: [" + employeeID + "] - NºLinea: (" + i + ") - Fichero: \"" + path
+						+ "\" - Linea: {" + csvData.get(i) + "}\n No se ha podido crear el objeto empleado.";
 				throw new SiaException(SiaExceptionCodes.PARSE_DATE, message, e);
 
 			} catch (NumberFormatException e) {
-				log.error("ID: [" + employeeID + "] - NºLinea: (" + i + ") - Fichero: \"" + path + "\" - Linea: {"
-						+ csvData.get(i)
-						+ "}\n No se ha podido crear el objeto empleado. Numero introducido incorrecto", e);
 				hm.put(employeeID, null);
-				String message = "error de lectura del salario";
+
+				String message = "ID: [" + employeeID + "] - NºLinea: (" + i + ") - Fichero: \"" + path
+						+ "\" - Linea: {" + csvData.get(i)
+						+ "}\n No se ha podido crear el objeto empleado. Numero introducido incorrecto";
 				throw new SiaException(SiaExceptionCodes.NUMBER_FORMAT, message, e);
 
 			} catch (Exception e) {
-				log.error("Fallo generico en la linea (" + i + ") del Fichero \"" + path + "\"", e);
-				String message = "";
+
+				String message = "Fallo generico en la linea (" + i + ") del Fichero \"" + path + "\"";
 				throw new SiaException(SiaExceptionCodes.GENERIC, message, e);
 
 			}
@@ -204,23 +209,25 @@ public class EmpCsv {
 	 * y su status(accion que se va a realizar), y en el caso de las modificaciones,
 	 * tambien la lista de los campos modificados.
 	 * 
-	 * @param transactionsList
+	 * @param transactionsList La lista de transacciones con las operaciones a
+	 *                         ejecutar
 	 * @throws SiaException
 	 */
 	public void generateTransactionsCsv(List<EmpTransaction> transactionsList) throws SiaException {
-		// creamos el nuevo csv
+		// Creamos el nuevo csv
 		createEmpCsv();
-		log.trace("creamos csv nuevo");
-		// empezamos las transacciones
+		log.trace("Creamos o sobreescribimos un fichero CSV");
+
+		// Empezamos las transacciones
 		for (EmpTransaction empTransaction : transactionsList) {
-			// si se crean o se destruyen escribimos todos los datos
+			// Si se crean o se destruyen escribimos todos los datos
 			if (empTransaction.getStatus().equals("CREATE") || empTransaction.getStatus().equals("DELETE")) {
 				System.out.println(empTransaction.toString());
 				String line = empTransaction.getEmployee().toCSV() + ";" + empTransaction.getStatus();
 				CsvAccess.writeCSV(line, file.getProperty(PropertyConstants.CSV_PATH));
 
 			} else {
-				// al modificar solo ecribimos los datos a cambiar
+				// Al modificar solo ecribimos los datos a cambiar
 				String line = updatedEmployeeToCsv(empTransaction);
 				CsvAccess.writeCSV(line, file.getProperty(PropertyConstants.CSV_PATH));
 
@@ -232,20 +239,17 @@ public class EmpCsv {
 	 * En este método lo que hacemos es crear una linea de csv con los datos a
 	 * modificar del empleado y el estado.
 	 * 
-	 * @param empTransaction
-	 * @return
+	 * @param empTransaction Transaccion de modificacion.
+	 * @return Linea obtenida de la conversión de la transaccion del empleado.
 	 */
 	private String updatedEmployeeToCsv(EmpTransaction empTransaction) {
-		/*
-		 * Estas variables son las que vamos a darle a la cadena updatedData para pasar
-		 * los datos. Estas cadenas se van a modificar si la lista modifiedFields
-		 * contiene el dato
-		 */
 
+		// Creamos la linea que vamos a devolver y a la que le iremos añadiendo la
+		// modificacion
 		String line = "";
 
-		// Estas variables son las vamos a utilizar para comprobar si el dato ha
-		// cambiado o no.
+		// Estos booleanos con los nombres de los campos son los vamos a utilizar para
+		// comprobar si el dato ha cambiado o no.
 		boolean name = false;
 		boolean surname1 = false;
 		boolean surname2 = false;
@@ -256,7 +260,7 @@ public class EmpCsv {
 		boolean yearSalary = false;
 		boolean sickLeave = false;
 
-		// Recorremos la lista para saber que datos no se han cambiado.
+		// Recorremos la lista para saber que datos se han modificado.
 		for (int i = 0; i < empTransaction.getModifiedFields().size(); i++) {
 
 			if (empTransaction.getModifiedFields().get(i).equals("name")) {

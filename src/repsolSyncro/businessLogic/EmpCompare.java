@@ -16,6 +16,7 @@ import repsolSyncro.entities.Employee;
  */
 public class EmpCompare {
 
+	// Logger para poder escribir las trazas del codigo en los logs
 	private static Logger log = Logger.getLogger(EmpCompare.class);
 
 	/**
@@ -60,13 +61,13 @@ public class EmpCompare {
 					// para saber si hay algun dato modificado
 					if (clientData.get(i).compareTo(serverData.get(i)) == 1) {
 
-						log.trace("Entramos en el métodp updateEmployee para actualizar al empleado ["
+						log.trace("Entramos en el método updateEmployee para actualizar al empleado ["
 								+ clientData.get(i).getId() + "]");
 
 						empTransaction = updateEmployee(clientData.get(i), serverData.get(i));
 						transactionList.add(empTransaction);
 
-						log.debug("Modificando al empleado: " + clientData.get(i).toString() + "\n datos anteriores: "
+						log.debug("Modificando al empleado: " + clientData.get(i).toString() + "\n Datos anteriores: "
 								+ serverData.get(i).toString());
 
 					} else {
@@ -182,6 +183,7 @@ public class EmpCompare {
 			modifiedFields.add("sickLeave");
 		}
 
+		// Creamos la transaccion de empleado y se la devolvemos con la lista de campos modificados.
 		EmpTransaction empTransaction = new EmpTransaction("UPDATE", clientEmployee, modifiedFields);
 		return empTransaction;
 	}

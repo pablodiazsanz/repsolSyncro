@@ -13,9 +13,10 @@ import repsolSyncro.exceptions.SiaException;
 
 public class MainClass {
 
-	// logger de la clase
+	// Logger para poder escribir las trazas del codigo en los logs
 	private static Logger log = Logger.getLogger(MainClass.class);
-	// booleano que nos dice si el programa trabaja conta BBDD o solo con csv
+	
+	// Booleano que nos dice si el programa trabaja conta BBDD o solo con csv
 	private static boolean csvToDatabase;
 		
 	/**
@@ -30,12 +31,13 @@ public class MainClass {
 		try {
 			// Comprobamos si las propiedades estan completas
 			boolean checkAndGo = PropertiesChecker.checker();
-			// recogemos si trabajamos contra BBDD o solo CSV
+			
+			// Recogemos si trabajamos contra BBDD o solo CSV
 			csvToDatabase = PropertiesChecker.getCsvToDatabase();
-
+			
 			// Comprobamos si queremos sincronizar con la base de datos o con csv
 			if (csvToDatabase) {
-				//comprobamos que la base de datos estas disponible
+				// Comprobamos que la base de datos estas disponible
 				checkAndGo = EmpDb.tryConnection();
 			}
 
