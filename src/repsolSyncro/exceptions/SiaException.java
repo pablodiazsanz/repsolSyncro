@@ -1,6 +1,10 @@
 package repsolSyncro.exceptions;
 
 public class SiaException extends Exception {
+	
+	private String errorCode;
+	private String message;
+	private Throwable cause;
 
 	public SiaException() {
 		super();
@@ -9,8 +13,9 @@ public class SiaException extends Exception {
 
 	// @Override
 	public SiaException(String errorCode, String message, Throwable cause) {
-		super();
-		// TODO Auto-generated constructor stub
+		this.errorCode = errorCode;
+		this.message = message;
+		this.cause = cause;
 	}
 
 	// @Override
@@ -24,5 +29,19 @@ public class SiaException extends Exception {
 		super(error);
 		// TODO Auto-generated constructor stub
 	}
+
+	public String getErrorCode() {
+		return errorCode;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public Throwable getCause() {
+		return cause;
+	}
+	
+	
 
 }
