@@ -76,6 +76,8 @@ public class MainClass {
 					EmpDb.executeTransactions(transactionsList);
 
 				}
+				
+				log.info("Sincronización realizada correctamente");
 			}
 		} catch (SiaException e) {
 			log.error("Obtenemos un error -  Código SiaException: [" + e.getErrorCode() + "]", e);
