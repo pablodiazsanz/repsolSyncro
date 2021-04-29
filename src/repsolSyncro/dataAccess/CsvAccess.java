@@ -80,16 +80,16 @@ public class CsvAccess {
 					// Leemos la linea
 					line = br.readLine();
 					log.trace("Linea " + contLine + " leida");
+					if (line.length() > 0) {
+						// Obtenemos los datos de cada linea, utilizando de clave el título de la
+						// columna y de valor el dato de la fila.
+						HashMap<String, String> lineData = getLineMap(line, columnsLine);
+						log.trace("Linea convertida a HashMap: " + lineData);
 
-					// Obtenemos los datos de cada linea, utilizando de clave el título de la
-					// columna y de valor el dato de la fila.
-					HashMap<String, String> lineData = getLineMap(line, columnsLine);
-					log.trace("Linea convertida a HashMap: " + lineData);
-
-					// Añadimos el HashMap lineData relleno en la List<HashMap<String, String>>
-					lineList.add(lineData);
-					log.trace("HashMap añadido a la lista de HashMaps");
-
+						// Añadimos el HashMap lineData relleno en la List<HashMap<String, String>>
+						lineList.add(lineData);
+						log.trace("HashMap añadido a la lista de HashMaps");
+					}
 				} catch (NullPointerException e) {
 					// Esto es un aviso, no es un error, porque si el fichero tiene una linea vacia
 					// lo que hacemos es saltarla.
@@ -356,17 +356,17 @@ public class CsvAccess {
 			// Cogemos el fichero para escribirlo, y le marcamos como true el parametro
 			// de añadir información, para asi añadirle los datos a la siguiente linea.
 			FileWriter fw = new FileWriter(path, true);
-			
-			// Añadimos la linea al fichero 
+
+			// Añadimos la linea al fichero
 			fw.write("\n" + csvLinea);
 			fw.close();
-			
+
 			log.debug("Linea añadida: [" + csvLinea + "]");
-			
+
 		} catch (IOException e) {
 			String message = "[" + csvLinea + "] - Fallo al escribir al usuario";
 			throw new SiaException(SiaExceptionCodes.IN_OUT, message, e);
-			
+
 		}
 	}
 }

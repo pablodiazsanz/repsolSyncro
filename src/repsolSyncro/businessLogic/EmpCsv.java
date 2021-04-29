@@ -145,7 +145,7 @@ public class EmpCsv {
 
 				String message = "ID: [" + employeeID + "] - NºLinea: (" + i + ") - Fichero: \"" + path
 						+ "\" - Linea: {" + csvData.get(i) + "}\n No se ha podido crear el objeto empleado.";
-				throw new SiaException(SiaExceptionCodes.PARSE_DATE, message, e);
+				// throw new SiaException(SiaExceptionCodes.PARSE_DATE, message, e);
 
 			} catch (NumberFormatException e) {
 				hm.put(employeeID, null);
@@ -153,7 +153,7 @@ public class EmpCsv {
 				String message = "ID: [" + employeeID + "] - NºLinea: (" + i + ") - Fichero: \"" + path
 						+ "\" - Linea: {" + csvData.get(i)
 						+ "}\n No se ha podido crear el objeto empleado. Numero introducido incorrecto";
-				throw new SiaException(SiaExceptionCodes.NUMBER_FORMAT, message, e);
+				// throw new SiaException(SiaExceptionCodes.NUMBER_FORMAT, message, e);
 
 			} catch (Exception e) {
 
@@ -177,20 +177,22 @@ public class EmpCsv {
 	 * @throws NumberFormatException en caso de error en el YearSalary
 	 */
 	private Employee createEmployee(HashMap<String, String> empData) throws ParseException, NumberFormatException {
-		
+
 		Date empHiringDate = null;
 		int empYearSalary = -1;
 		boolean empSickLeave = false;
 		// parseamos la fecha de striong a objeto Date
+
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		formatter.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
 		empHiringDate = formatter.parse(empData.get(hiringDate));
+
 		// Aqui formateamos el salario anual a numero entero
 		empYearSalary = Integer.parseInt(empData.get(yearSalary));
 		// Parseamos el boleano de la baja
 		empSickLeave = Boolean.parseBoolean(empData.get(sickLeave));
 		log.trace("Parseamos todos los datos necesarios del csv");
-		
+
 		// Creamos el empleado con los datos obtenidos
 		Employee emp = new Employee(empData.get(id), empData.get(name), empData.get(surname1), empData.get(surname2),
 				empData.get(phone), empData.get(email), empData.get(job), empHiringDate, empYearSalary, empSickLeave);
