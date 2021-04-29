@@ -44,7 +44,7 @@ public class PropertiesChecker {
 	 * @throws SiaException si la comprobación es incorrecta
 	 */
 	public static boolean checker() throws SiaException {
-
+		log.trace("iniciamos la comprobacion de los properties");
 		// Inicializamos allProperties
 		allProperties = new Properties();
 
@@ -55,10 +55,12 @@ public class PropertiesChecker {
 
 		} catch (FileNotFoundException e) {
 			String message = "Fichero no encontrado: [" + PropertiesPath + "]";
+			log.error(SiaExceptionCodes.MISSING_FILE + " - " + message, e);
 			throw new SiaException(SiaExceptionCodes.MISSING_FILE, message, e);
 
 		} catch (IOException e) {
 			String message = "Fallo de entrada o salida";
+			log.error(SiaExceptionCodes.IN_OUT + " - " + message, e);
 			throw new SiaException(SiaExceptionCodes.IN_OUT, message, e);
 
 		}
@@ -70,6 +72,7 @@ public class PropertiesChecker {
 
 		String[] ficheros = {};
 
+		log.trace("elegimos como trabajamos");
 		// Seleccionamos que ficheros properties y que datos deseamos leer
 		// false - csv de cliente y servidor y resultado
 		// true - csv de cliente, y acceso a BBDD para servidor y resultado
@@ -84,11 +87,12 @@ public class PropertiesChecker {
 		// si contienen la palabra csv en la "variable" del properties iran a
 		// comprobarse con el metodo de los csv, si no iran a BBDD
 		for (int i = 0; i < ficheros.length; i++) {
-
+			log.trace("comporvamos properties csv");
 			if (ficheros[i].contains("CSV")) {
 				valido = checkCsvProperties(allProperties.getProperty(ficheros[i]));
 
 			} else {
+				log.trace("comporvamos properties BBDD");
 				valido = checkBDProperties(allProperties.getProperty(ficheros[i]));
 
 			}
@@ -131,11 +135,12 @@ public class PropertiesChecker {
 		boolean readed = false;
 
 		try {
+			log.trace("leemos fichero de csv");
 			// Leemos la ruta del archivo
 			Properties file = new Properties();
 			FileInputStream ip = new FileInputStream(src);
 			file.load(ip);
-
+			log.trace("comprobamos valores en fichero properties");
 			// Leemos los datos comprobando que no falta ninguno
 			file.getProperty(PropertyConstants.CSV_PATH);
 			file.getProperty(PropertyConstants.CSV_HEAD_ID);
@@ -184,17 +189,17 @@ public class PropertiesChecker {
 			Properties file = new Properties();
 			FileInputStream ip = new FileInputStream(src);
 			file.load(ip);
-
+			log.trace("leemos fichero de BBDD");
 			// Leemos los datos comprobando que no falta ninguno
 			file.getProperty(PropertyConstants.DB_DRIVER);
 			file.getProperty(PropertyConstants.DB_USERNAME);
 			file.getProperty(PropertyConstants.DB_PASSWORD);
-
+			log.trace("comprobamos valores en fichero DDBB");
 			// Solo se pasa a true en caso de que pase por todos los datos del fichero
 			// properties
 			readed = true;
 			log.trace("Fichero leido exitosamente: [" + src + "]");
-			
+
 		} catch (FileNotFoundException e) {
 			log.error("Fichero no encontrado", e);
 			throw new SiaException(SiaExceptionCodes.MISSING_FILE, e);
