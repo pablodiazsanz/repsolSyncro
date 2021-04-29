@@ -105,22 +105,28 @@ public class EmpDb {
 	 * Busca en la BBDD la lista de empleados y la devuelve en un HashMap donde la
 	 * clave es su ID
 	 * 
-	 * @return HasMap<String, Employee> con la lista de empleados como value y su id por key
+	 * @return HasMap<String, Employee> con la lista de empleados como value y su id
+	 *         por key
 	 * @throws SiaException
 	 */
 	public static HashMap<String, Employee> getMap() throws SiaException {
 		HashMap<String, Employee> employeeList = new HashMap<String, Employee>();
 		try {
+			// Conectamos con la BBDD
 			conn = DriverManager.getConnection(driver, user, pwd);
 			log.trace("Conexion establecida");
 
+			// Ponemos la query para obtener la tabla de empleados
 			String query = "SELECT * FROM employee;";
 			log.trace("Query: " + query);
 
+			// Ejecutamos la operacion y obtenemos los datos medante ResultSet
 			PreparedStatement stmt = conn.prepareStatement(query);
 			ResultSet rset = stmt.executeQuery();
 			log.trace("Query ejecutada");
 
+			// Recorremos linea a linea del ResultSet y vamos sacando los empleados uno a
+			// uno y lo añadimos a la lista de empleados
 			while (rset.next()) {
 				Employee emp = new Employee(rset.getString(DatabaseConstants.ID),
 						rset.getString(DatabaseConstants.NAME), rset.getString(DatabaseConstants.SURNAME1),
@@ -178,7 +184,7 @@ public class EmpDb {
 
 			} else if (empTransaction.getStatus().equals("DELETE")) {
 				String query = "DELETE FROM employee WHERE ID = '" + empTransaction.getEmployee().getId() + "';";
-				
+
 				log.trace("Query a ejecutar: " + query);
 				DbAccess.executeStatement(query, file);
 
@@ -187,7 +193,7 @@ public class EmpDb {
 				// los datos a modificar
 				String query = getQueryUpdatedEmployee(empTransaction.getEmployee(),
 						empTransaction.getModifiedFields());
-				
+
 				log.trace("Query a ejecutar: " + query);
 				DbAccess.executeStatement(query, file);
 			}
@@ -195,7 +201,7 @@ public class EmpDb {
 	}
 
 	/**
-	 * Aqui obtenemos la query de modificacion de un empleado para mandarla ejecutar
+	 * Aqui obtenemos la query de UPDATE de un empleado para mandarla ejecutar
 	 * 
 	 * @param updatedEmployee El empleado que se modifica
 	 * @param modifiedFields  Los campos a modificar
@@ -207,8 +213,8 @@ public class EmpDb {
 		// Creamos esta variable para iniciar la query que vamos a mandar.
 		String query = "UPDATE employee SET";
 
-		// Estas variables son las vamos a utilizar para comprobar si el dato ha
-		// cambiado o no.
+		// Estos booleanos con los nombres de los campos son los que vamos a utilizar
+		// para comprobar si el dato ha cambiado o no.
 		boolean name = false;
 		boolean surname1 = false;
 		boolean surname2 = false;
@@ -219,7 +225,7 @@ public class EmpDb {
 		boolean yearSalary = false;
 		boolean sickLeave = false;
 
-		// Recorremos la lista para saber que datos no se han cambiado.
+		// Recorremos la lista para saber que datos se han cambiado.
 		for (int i = 0; i < modifiedFields.size(); i++) {
 
 			if (modifiedFields.get(i).equals("name")) {

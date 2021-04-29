@@ -121,7 +121,7 @@ public class EmpCsv {
 
 		// Obtenemos la lista de los datos del csv de empleados
 		List<HashMap<String, String>> csvData = CsvAccess.getData(path);
-		log.trace("obtenemos los datos del csv");
+		log.trace("Obtenemos los datos del  fichero csv [" + path + "]");
 		String employeeID = "NO ID";
 
 		// Recorremos linea a linea de la lista de datos del csv para obtener los
@@ -136,6 +136,7 @@ public class EmpCsv {
 
 				// Añadimos al HashMap el objeto Employee que utiliza de clave el ID de ese
 				// empleado
+				log.trace("Entramos en el método createEmployee");
 				Employee emp = createEmployee(csvData.get(i));
 				hm.put(employeeID, emp);
 
@@ -176,6 +177,7 @@ public class EmpCsv {
 	 * @throws NumberFormatException en caso de error en el YearSalary
 	 */
 	private Employee createEmployee(HashMap<String, String> empData) throws ParseException, NumberFormatException {
+		
 		Date empHiringDate = null;
 		int empYearSalary = -1;
 		boolean empSickLeave = false;
@@ -187,9 +189,13 @@ public class EmpCsv {
 		empYearSalary = Integer.parseInt(empData.get(yearSalary));
 		// Parseamos el boleano de la baja
 		empSickLeave = Boolean.parseBoolean(empData.get(sickLeave));
-		log.trace("parseamos todos los datos necesarios del csv ");
-		return new Employee(empData.get(id), empData.get(name), empData.get(surname1), empData.get(surname2),
+		log.trace("Parseamos todos los datos necesarios del csv");
+		
+		// Creamos el empleado con los datos obtenidos
+		Employee emp = new Employee(empData.get(id), empData.get(name), empData.get(surname1), empData.get(surname2),
 				empData.get(phone), empData.get(email), empData.get(job), empHiringDate, empYearSalary, empSickLeave);
+		log.trace(emp);
+		return emp;
 	}
 
 	/**
