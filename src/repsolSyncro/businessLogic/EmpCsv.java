@@ -145,7 +145,7 @@ public class EmpCsv {
 
 				String message = "ID: [" + employeeID + "] - NºLinea: (" + i + ") - Fichero: \"" + path
 						+ "\" - Linea: {" + csvData.get(i) + "}\n No se ha podido crear el objeto empleado.";
-				// throw new SiaException(SiaExceptionCodes.PARSE_DATE, message, e);
+				log.warn(message);
 
 			} catch (NumberFormatException e) {
 				hm.put(employeeID, null);
@@ -153,7 +153,7 @@ public class EmpCsv {
 				String message = "ID: [" + employeeID + "] - NºLinea: (" + i + ") - Fichero: \"" + path
 						+ "\" - Linea: {" + csvData.get(i)
 						+ "}\n No se ha podido crear el objeto empleado. Numero introducido incorrecto";
-				// throw new SiaException(SiaExceptionCodes.NUMBER_FORMAT, message, e);
+				log.warn(message);
 
 			} catch (Exception e) {
 
@@ -230,7 +230,6 @@ public class EmpCsv {
 		for (EmpTransaction empTransaction : transactionsList) {
 			// Si se crean o se destruyen escribimos todos los datos
 			if (empTransaction.getStatus().equals("CREATE") || empTransaction.getStatus().equals("DELETE")) {
-				System.out.println(empTransaction.toString());
 				String line = empTransaction.getEmployee().toCSV() + ";" + empTransaction.getStatus();
 				CsvAccess.writeCSV(line, file.getProperty(PropertyConstants.CSV_PATH));
 
