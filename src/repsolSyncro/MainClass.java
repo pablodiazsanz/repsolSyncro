@@ -78,7 +78,7 @@ public class MainClass {
 				}
 			}
 		} catch (SiaException e) {
-			log.error("Obtenemos un error -  Código SiaExcepion: [" + e.getErrorCode() + "]", e);
+			log.error("Obtenemos un error -  Código SiaException: [" + e.getErrorCode() + "]", e);
 		} finally {
 			log.trace("Finaliza el programa");
 		}

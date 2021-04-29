@@ -208,8 +208,8 @@ public class EmpCsv {
 	 */
 	private void createEmpCsv() throws SiaException {
 		// linea escrita para los csv de resultados de empleados
-		String columsLine = "id;name;first surname;second surname;phone;email;job;hiring_date;year_salary;sick_leave;status";
-		CsvAccess.createCSV(columsLine, file.getProperty(PropertyConstants.CSV_PATH));
+		String columsLine = id + ";" + name + ";" + surname1 + ";" + surname2 + ";" + phone + ";" + email + ";" + job + ";" + hiringDate + ";" + yearSalary + ";" + sickLeave + ";status";
+		CsvAccess.createCSV(columsLine, path);
 	}
 
 	/**
@@ -231,12 +231,12 @@ public class EmpCsv {
 			// Si se crean o se destruyen escribimos todos los datos
 			if (empTransaction.getStatus().equals("CREATE") || empTransaction.getStatus().equals("DELETE")) {
 				String line = empTransaction.getEmployee().toCSV() + ";" + empTransaction.getStatus();
-				CsvAccess.writeCSV(line, file.getProperty(PropertyConstants.CSV_PATH));
+				CsvAccess.writeCSV(line, path);
 
 			} else {
 				// Al modificar solo ecribimos los datos a cambiar
 				String line = updatedEmployeeToCsv(empTransaction);
-				CsvAccess.writeCSV(line, file.getProperty(PropertyConstants.CSV_PATH));
+				CsvAccess.writeCSV(line, path);
 
 			}
 		}
