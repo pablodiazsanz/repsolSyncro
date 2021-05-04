@@ -9,14 +9,14 @@ package repsolSyncro.constants;
  */
 public class DatabaseConstants {
 	
-	public final static int ID = 1;
-	public final static int NAME = 2;
-	public final static int SURNAME1 = 3;
-	public final static int SURNAME2 = 4;
-	public final static int PHONE = 5;
-	public final static int EMAIL = 6;
-	public final static int JOB = 7;
-	public final static int HIRING_DATE = 8;
-	public final static int YEAR_SALARY = 9;
-	public final static int SICK_LEAVE = 10;
+	public final static String ID = "ID";
+	public final static String NAME = "NAME";
+	public final static String SURNAME1 = "FIRST_SURNAME";
+	public final static String SURNAME2 = "SECOND_SURNAME";
+	public final static String PHONE = "PHONE";
+	public final static String EMAIL = "EMAIL";
+	public final static String JOB = "JOB";
+	public final static String HIRING_DATE = "HIRING_DATE";
+	public final static String YEAR_SALARY = "YEAR_SALARY";
+	public final static String SICK_LEAVE = "SICK_LEAVE";
 }

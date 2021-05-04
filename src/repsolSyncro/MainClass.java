@@ -7,6 +7,7 @@ import repsolSyncro.businessLogic.EmpCompare;
 import repsolSyncro.businessLogic.EmpCsv;
 import repsolSyncro.businessLogic.EmpDb;
 import repsolSyncro.businessLogic.PropertiesChecker;
+import repsolSyncro.dataAccess.DbAccess;
 import repsolSyncro.entities.EmpTransaction;
 import repsolSyncro.entities.Employee;
 import repsolSyncro.exceptions.SiaException;
@@ -38,7 +39,7 @@ public class MainClass {
 			// Comprobamos si queremos sincronizar con la base de datos o con csv
 			if (csvToDatabase) {
 				// Comprobamos que la base de datos estas disponible
-				checkAndGo = EmpDb.tryConnection();
+				checkAndGo = DbAccess.tryConnection();
 			}
 
 			// Si todo es correcto, arrancamos el programa
