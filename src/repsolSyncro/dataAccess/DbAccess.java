@@ -110,8 +110,7 @@ public class DbAccess {
 	public void executeStatement(String query) throws SiaException {
 		try {
 			// Preparamos la conexión
-			conn = DriverManager.getConnection(file.getProperty(PropertyConstants.DB_DRIVER),
-					file.getProperty(PropertyConstants.DB_USERNAME), file.getProperty(PropertyConstants.DB_PASSWORD));
+			conn = DriverManager.getConnection(driver, user, pwd);
 			log.trace("Conexión lista. Operacion a ejecutar: " + query);
 
 			// Conectamos con la base de datos y ejecutamos la operación
@@ -143,8 +142,7 @@ public class DbAccess {
 		List<HashMap<String, String>> dataList = new ArrayList<HashMap<String, String>>();
 		try {
 			// Conectamos con la bbdd
-			conn = DriverManager.getConnection(file.getProperty(PropertyConstants.DB_DRIVER),
-					file.getProperty(PropertyConstants.DB_USERNAME), file.getProperty(PropertyConstants.DB_PASSWORD));
+			conn = DriverManager.getConnection(driver, user, pwd);
 
 			log.trace("Conectado a la bbdd");
 

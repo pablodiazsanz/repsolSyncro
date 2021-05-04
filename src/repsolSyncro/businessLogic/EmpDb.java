@@ -34,6 +34,7 @@ public class EmpDb extends Emp {
 	// Tabla sobre la que trabajamos
 	private static String table;
 
+	// Fichero de propiedades que cogemos
 	private static Properties file;
 	private static FileInputStream ip;
 
@@ -41,9 +42,12 @@ public class EmpDb extends Emp {
 
 	public EmpDb(String fileName) throws SiaException {
 		try {
+			// Creamos un properties
 			file = new Properties();
-			if (fileName.equals("CLIENT")) {
 
+			// Depende si es cliente, servidor o resultado, traemos los datos de un fichero
+			// de propiedades o de otros
+			if (fileName.equals("CLIENT")) {
 				ip = new FileInputStream(
 						PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE));
 				file.load(ip);
@@ -56,15 +60,19 @@ public class EmpDb extends Emp {
 				file.load(ip);
 
 				db = new DbAccess(file);
+
 			} else if (fileName.equals("RESULT")) {
 				ip = new FileInputStream(
 						PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE));
 				file.load(ip);
 
 				db = new DbAccess(file);
+
 			}
 
+			// Obtenemos el nombre de la tabla de la bbdd
 			table = file.getProperty(PropertyConstants.DB_TABLE);
+
 		} catch (FileNotFoundException e) {
 			String message = "No se ha encontrado el fichero o este no existe";
 			throw new SiaException(SiaExceptionCodes.MISSING_FILE, message, e);
@@ -176,7 +184,8 @@ public class EmpDb extends Emp {
 
 			// Comprobamos el estado de la transacción para hacer un tipo de query u otro
 			if (empTransaction.getStatus().equals("CREATE")) {
-				String query = "INSERT INTO employee(id,name,first_surname,second_surname,phone,email,job,hiring_date,year_salary,sick_leave) VALUES ('"
+				String query = "INSERT INTO " + table
+						+ "(id,name,first_surname,second_surname,phone,email,job,hiring_date,year_salary,sick_leave) VALUES ('"
 						+ empTransaction.getEmployee().getId() + "','" + empTransaction.getEmployee().getName() + "','"
 						+ empTransaction.getEmployee().getSurname1() + "','"
 						+ empTransaction.getEmployee().getSurname2() + "'," + empTransaction.getEmployee().getTlf()
@@ -191,7 +200,7 @@ public class EmpDb extends Emp {
 				db.executeStatement(query);
 
 			} else if (empTransaction.getStatus().equals("DELETE")) {
-				String query = "DELETE FROM employee WHERE ID = '" + empTransaction.getEmployee().getId() + "';";
+				String query = "DELETE FROM " + table + " WHERE ID = '" + empTransaction.getEmployee().getId() + "';";
 
 				log.trace("Query a ejecutar: " + query);
 				db.executeStatement(query);
@@ -199,7 +208,7 @@ public class EmpDb extends Emp {
 			} else {
 				// Para el UPDATE, obtenemos el empleado desde otro método en el que comprobamos
 				// los datos a modificar
-				String query = getUpdatedEmployee(empTransaction);
+				String query = "UPDATE " + table + " SET" + getUpdatedEmployee(empTransaction);
 
 				log.trace("Query a ejecutar: " + query);
 				db.executeStatement(query);
@@ -217,7 +226,7 @@ public class EmpDb extends Emp {
 	 */
 	public String getUpdatedEmployee(EmpTransaction empTransaction) {
 		// Creamos esta variable para iniciar la query que vamos a mandar.
-		String query = "UPDATE employee SET";
+		String query = "";
 
 		// Estos booleanos con los nombres de los campos son los que vamos a utilizar
 		// para comprobar si el dato ha cambiado o no.

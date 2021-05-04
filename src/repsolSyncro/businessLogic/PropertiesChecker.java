@@ -3,7 +3,6 @@ package repsolSyncro.businessLogic;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -19,9 +18,8 @@ public class PropertiesChecker {
 	private static Logger log = Logger.getLogger(PropertiesChecker.class);
 
 	// Ruta al fichero con todos los properties
-	// private static String PropertiesPath =
-	// "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
-	private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
+	private static String PropertiesPath = "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
+	//private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
 
 	private static boolean clientElection;
 	private static boolean serverElection;
@@ -60,15 +58,16 @@ public class PropertiesChecker {
 
 		}
 
-		// cargamos las opciones dependiendo del origen de cada parte
+		// Cargamos las opciones dependiendo del origen de cada parte
 		clientElection = Boolean.parseBoolean(allProperties.getProperty(PropertyConstants.CLIENT_ELECTION));
 		serverElection = Boolean.parseBoolean(allProperties.getProperty(PropertyConstants.SERVER_ELECTION));
 		resultElection = Boolean.parseBoolean(allProperties.getProperty(PropertyConstants.RESULT_ELECTION));
 
 		log.trace("Elegimos como trabajamos");
-		// comprobamos las properties de cada origen dependiendo de como se trabajen
+		// Comprobamos las properties de cada origen dependiendo de como se trabajen
 		// si alguno falla saltaria una excepcion y nunca llegaria al return por lo que
-		// el programa pararia ahi
+		// el programa pararia ahi.
+		
 		// true - Base de datos
 		// false - csv
 		if (clientElection) {
@@ -105,7 +104,7 @@ public class PropertiesChecker {
 	}
 
 	/**
-	 * Devuelve el valo booleano de forma de trabajo del cliente
+	 * Devuelve el valor booleano de forma de trabajo del cliente
 	 * 
 	 * @return boolean
 	 */
@@ -114,7 +113,7 @@ public class PropertiesChecker {
 	}
 
 	/**
-	 * Devuelve el valo booleano de forma de trabajo del server
+	 * Devuelve el valor booleano de forma de trabajo del server
 	 * 
 	 * @return boolean
 	 */
@@ -123,7 +122,7 @@ public class PropertiesChecker {
 	}
 
 	/**
-	 * Devuelve el valo booleano de forma de trabajo del resultado
+	 * Devuelve el valor booleano de forma de trabajo del resultado
 	 * 
 	 * @return boolean
 	 */
@@ -146,12 +145,12 @@ public class PropertiesChecker {
 		boolean readed = false;
 
 		try {
-			log.trace("leemos fichero de csv");
+			log.trace("Leemos fichero de csv");
 			// Leemos la ruta del archivo
 			Properties file = new Properties();
 			FileInputStream ip = new FileInputStream(src);
 			file.load(ip);
-			log.trace("comprobamos valores en fichero properties");
+			log.trace("Comprobamos valores en fichero properties");
 			// Leemos los datos comprobando que no falta ninguno
 			file.getProperty(PropertyConstants.CSV_PATH);
 			file.getProperty(PropertyConstants.CSV_HEAD_ID);
@@ -200,13 +199,13 @@ public class PropertiesChecker {
 			Properties file = new Properties();
 			FileInputStream ip = new FileInputStream(src);
 			file.load(ip);
-			log.trace("leemos fichero de BBDD");
+			log.trace("Leemos fichero de BBDD");
 			// Leemos los datos comprobando que no falta ninguno
 			file.getProperty(PropertyConstants.DB_DRIVER);
 			file.getProperty(PropertyConstants.DB_USERNAME);
 			file.getProperty(PropertyConstants.DB_PASSWORD);
 			file.getProperty(PropertyConstants.DB_TABLE);
-			log.trace("comprobamos valores en fichero DDBB");
+			log.trace("Comprobamos valores en fichero BBDD");
 			// Solo se pasa a true en caso de que pase por todos los datos del fichero
 			// properties
 			readed = true;
