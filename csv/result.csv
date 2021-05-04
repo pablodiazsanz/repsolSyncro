@@ -1,4 +1,4 @@
-id;name;first surname;second surname;phone;email;job;hiring_date;year salary;sick leave;status
+id;name;first surname;second surname;phone;email;job;hiring_date;year_salary;sick_leave;status
 H61;Jorge;Hernandez;Obtuso;63219874;aqqwr@email.com;Becario;09/10/2016 15:16:13;18000;false;CREATE
 H63;Petunia;Hernandez;Isosceles;63219874;aqqwr@email.com;Becario;11/12/2017 15:16:13;18000;false;CREATE
 H62;Marisa;Hernandez;Agudo;63219874;aqqwr@email.com;"Beca;rio";10/01/2017 15:16:13;18000;false;CREATE

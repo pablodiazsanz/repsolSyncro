@@ -19,10 +19,10 @@ public class PropertiesChecker {
 	private static Logger log = Logger.getLogger(PropertiesChecker.class);
 
 	// Ruta al fichero con todos los properties
-	//private static String PropertiesPath = "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
+	// private static String PropertiesPath =
+	// "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
 	private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
 
-	
 	private static boolean clientElection;
 	private static boolean serverElection;
 	private static boolean resultElection;
@@ -60,34 +60,38 @@ public class PropertiesChecker {
 
 		}
 
-		
+		// cargamos las opciones dependiendo del origen de cada parte
 		clientElection = Boolean.parseBoolean(allProperties.getProperty(PropertyConstants.CLIENT_ELECTION));
 		serverElection = Boolean.parseBoolean(allProperties.getProperty(PropertyConstants.SERVER_ELECTION));
 		resultElection = Boolean.parseBoolean(allProperties.getProperty(PropertyConstants.RESULT_ELECTION));
 
 		log.trace("Elegimos como trabajamos");
-		
+		// comprobamos las properties de cada origen dependiendo de como se trabajen
+		// si alguno falla saltaria una excepcion y nunca llegaria al return por lo que
+		// el programa pararia ahi
+		// true - Base de datos
+		// false - csv
 		if (clientElection) {
-			checkCsvProperties(allProperties.getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE));
-		} else {
 			checkDbProperties(allProperties.getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE));
 			DbAccess.tryConnection(PropertyConstants.PATH_CLIENT_PROPERTY_FILE);
-		}
-		
-		if (serverElection) {
-			checkCsvProperties(allProperties.getProperty(PropertyConstants.PATH_SERVER_PROPERTY_FILE));
 		} else {
+			checkCsvProperties(allProperties.getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE));
+		}
+
+		if (serverElection) {
 			checkDbProperties(allProperties.getProperty(PropertyConstants.PATH_SERVER_PROPERTY_FILE));
 			DbAccess.tryConnection(PropertyConstants.PATH_SERVER_PROPERTY_FILE);
-		}
-		
-		if (resultElection) {
-			checkCsvProperties(allProperties.getProperty(PropertyConstants.PATH_RESULT_PROPERTY_FILE));
 		} else {
+			checkCsvProperties(allProperties.getProperty(PropertyConstants.PATH_SERVER_PROPERTY_FILE));
+		}
+
+		if (resultElection) {
 			checkDbProperties(allProperties.getProperty(PropertyConstants.PATH_RESULT_PROPERTY_FILE));
 			DbAccess.tryConnection(PropertyConstants.PATH_RESULT_PROPERTY_FILE);
+		} else {
+			checkCsvProperties(allProperties.getProperty(PropertyConstants.PATH_RESULT_PROPERTY_FILE));
 		}
-		
+
 		return true;
 	}
 
@@ -99,20 +103,33 @@ public class PropertiesChecker {
 	public static Properties getAllProperties() {
 		return allProperties;
 	}
-	
-	
+
+	/**
+	 * Devuelve el valo booleano de forma de trabajo del cliente
+	 * 
+	 * @return boolean
+	 */
 	public static boolean getClientElection() {
 		return clientElection;
 	}
-	
+
+	/**
+	 * Devuelve el valo booleano de forma de trabajo del server
+	 * 
+	 * @return boolean
+	 */
 	public static boolean getServerElection() {
 		return serverElection;
 	}
-	
+
+	/**
+	 * Devuelve el valo booleano de forma de trabajo del resultado
+	 * 
+	 * @return boolean
+	 */
 	public static boolean getResultElection() {
 		return resultElection;
 	}
-	
 
 	/**
 	 * Metodo que busca en el fichero .properties si todos los datos tienen valor y

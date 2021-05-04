@@ -1,9 +1,19 @@
 package repsolSyncro.businessLogic;
 
 import repsolSyncro.exceptions.SiaException;
-
+/**
+ * Factoria de objetos Emp que decide si trabajn conm Base de Datos
+ * o csv 
+ *
+ */
 public class EmpFactory {
-	
+	/**
+	 * devuelve el objeto emp que apunta al tipo de origen que corresponde de los properties
+	 * 
+	 * @param election
+	 * @return
+	 * @throws SiaException
+	 */
 	public static Emp getEmp(String election) throws SiaException {
 		
 		switch (election) {
