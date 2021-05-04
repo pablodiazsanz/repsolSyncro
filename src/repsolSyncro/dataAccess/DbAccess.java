@@ -33,17 +33,16 @@ public class DbAccess {
 	// Logger para poder escribir las trazas del codigo en los logs
 	private static Logger log = Logger.getLogger(DbAccess.class);
 	// Objetos para leer el archivo properties
-		private static Properties file;
-		private static FileInputStream ip;
+	private static Properties file;
+	private static FileInputStream ip;
 
-		// Datos de conexion a la BBDD
-		// Direccion de la BBDD
-		private static String driver;
-		// Usuario que se loguea en la BBDD
-		private static String user;
-		// Contraseña del usuario que se logea
-		private static String pwd;
-
+	// Datos de conexion a la BBDD
+	// Direccion de la BBDD
+	private static String driver;
+	// Usuario que se loguea en la BBDD
+	private static String user;
+	// Contraseña del usuario que se logea
+	private static String pwd;
 
 	/**
 	 * Comprueba que la conexion a BBDD se realiza correctamente y tambien comprueba
@@ -93,27 +92,28 @@ public class DbAccess {
 		}
 		return connected;
 	}
-	
+
 	/**
 	 * Este metodo ejecuta la query pasada por parametro en la base de datos
 	 * señalada por el properties tambien pasado por parametro
 	 * 
 	 * @param query que va a ser ejecutada en la BBDD
-	 * @param file  Properties que posee los datos del driver, usuario y password de la BBDD
+	 * @param file  Properties que posee los datos del driver, usuario y password de
+	 *              la BBDD
 	 * @throws SiaException
 	 */
 	public static void executeStatement(String query) throws SiaException {
 		try {
-			//Preparamos la conexión
+			// Preparamos la conexión
 			conn = DriverManager.getConnection(file.getProperty(PropertyConstants.DB_DRIVER),
 					file.getProperty(PropertyConstants.DB_USERNAME), file.getProperty(PropertyConstants.DB_PASSWORD));
 			log.trace("Conexión lista. Operacion a ejecutar: " + query);
-			
+
 			// Conectamos con la base de datos y ejecutamos la operación
 			PreparedStatement stmt = conn.prepareStatement(query);
 			stmt.execute();
 			log.trace("Operacion ejecutada: " + query);
-			
+
 			// Cerramos la conexión a la bbdd
 			conn.close();
 		} catch (SQLException e) {
@@ -121,33 +121,56 @@ public class DbAccess {
 			throw new SiaException(SiaExceptionCodes.SQL_ERROR, message, e);
 		}
 	}
+
 	/**
+	 * En este método lo que hacemos es recuperar toda la información de la tabla de
+	 * la base de datos y la almacenamos en una List<HashMap<String, String>> con el
+	 * primer String del HashMap con el nombre de la columna y el segundo String el
+	 * dato que se obtiene del ResultSet.
 	 * 
-	 * 
-	 * @param table
-	 * @param file
-	 * @return
+	 * @param table El nombre de la tabla de la que recogemos la informacion
+	 * @return dataList La List<HashMap<String, String>> con los datos de la tabla
+	 * @throws SiaException 
 	 */
-	public static List<HashMap<String, String>> getDataFromTable(String table){
+	public static List<HashMap<String, String>> getDataFromTable(String table) throws SiaException {
+		
+		// Creamos la List<HashMap<String, String>> para almacenar los datos
 		List<HashMap<String, String>> dataList = new ArrayList<HashMap<String, String>>();
 		try {
+			// Conectamos con la bbdd
 			conn = DriverManager.getConnection(file.getProperty(PropertyConstants.DB_DRIVER),
 					file.getProperty(PropertyConstants.DB_USERNAME), file.getProperty(PropertyConstants.DB_PASSWORD));
+			
+			log.trace("Conectado a la bbdd");
+			
+			// Preparamos la consulta a la tabla
 			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + table);
+			log.trace("Nombre de la tabla a la que vamos a hacer la consulta: " + table);
+			
+			// Ejecutamos la consulta
 			ResultSet rset = stmt.executeQuery();
+			
+			// Obtenemos el numero de columnas que tiene la tabla
 			int columnsNumber = rset.getMetaData().getColumnCount();
+			
+			// Recorremos las lineas de consulta y le pasamos los datos a la lisya
 			while (rset.next()) {
+				
+				// Creamos un HashMap para ir agregando linea a linea
 				HashMap<String, String> dataLine = new HashMap<>();
 				for (int i = 1; i <= columnsNumber; i++) {
 					dataLine.put(rset.getMetaData().getColumnName(i), rset.getString(i));
 				}
+				
+				log.trace(dataLine);
 				dataList.add(dataLine);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String message = "Error en la conexion a la bbdd";
+			throw new SiaException(SiaExceptionCodes.SQL_ERROR, message, e);
+			
 		}
 		return dataList;
 	}
-	
+
 }

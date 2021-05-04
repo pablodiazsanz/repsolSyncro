@@ -1,25 +1,15 @@
 package repsolSyncro.businessLogic;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 
 import repsolSyncro.constants.DatabaseConstants;
-import repsolSyncro.constants.PropertyConstants;
 import repsolSyncro.dataAccess.DbAccess;
 import repsolSyncro.entities.EmpTransaction;
 import repsolSyncro.entities.Employee;
@@ -34,73 +24,93 @@ import repsolSyncro.exceptions.SiaExceptionCodes;
  */
 public class EmpDb {
 
-	// Objeto de conexion a la BBDD
-	private static Connection conn;
-
 	// Logger para poder escribir las trazas del codigo en los logs
 	private static Logger log = Logger.getLogger(EmpDb.class);
-	//tabla sobre la que tabajamos
-	private static String table = "employee";
+	// Tabla sobre la que trabajamos
+	private static String table = "EMPLOYEE";
 
-	
 	public EmpDb() {
 	}
 
-	
-
 	/**
-	 * Busca en la BBDD la lista de empleados y la devuelve en un HashMap donde la
-	 * clave es su ID
+	 * Metodo que devuelve el HashMap<String, Employee> con los empleados con su ID
+	 * como Key de la base de datos que llamemos.
 	 * 
-	 * @return HasMap<String, Employee> con la lista de empleados como value y su id
-	 *         por key
+	 * @return HashMap<String, Employee> con la lista de empleados como value y su
+	 *         id por key
 	 * @throws SiaException
 	 */
 	public static HashMap<String, Employee> getMap() throws SiaException {
+		// Creamos el HashMap que vamos a rellenar con el id y con los empleados.
 		HashMap<String, Employee> employeeList = new HashMap<String, Employee>();
-		List<HashMap<String, String>> dataList = DbAccess.getDataFromTable(table);
-		for (HashMap<String, String> dataline : dataList) {
 
-			try {
-				Employee emp = createEmployee(dataline);
-				employeeList.put(emp.getId(), emp);
-			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		// Aqui recuperamos los datos de la bbdd en forma de List<HashMap<String,
+		// String>>. El primer String del HashMap es el nombre de la columna y el
+		// segundo String el dato que le corresponde.
+		List<HashMap<String, String>> dataList = DbAccess.getDataFromTable(table);
+		log.trace("Datos recuperados de la tabla " + table);
+
+		// Recorremos la lista de los datos de la bbdd y vamos generando los empleados y
+		// metiendolos en el HashMap que vamos a devolver.
+		for (HashMap<String, String> dataline : dataList) {
+			// Creamos el empleado
+			Employee emp = createEmployee(dataline);
+			// Lo metemos en el HashMap
+			employeeList.put(emp.getId(), emp);
+			log.trace("Añadimos el employee al HashMap: " + emp);
 		}
+
 		log.trace("Lista de empleados: [" + employeeList + "]");
 		return employeeList;
 
 	}
 
-	private static Employee createEmployee(HashMap<String, String> empData)
-			throws ParseException, NumberFormatException {
+	/**
+	 * Metodo que crea el objeto empleado a partir de la coleccion de datos
+	 * extraida de la BBDD
+	 * 
+	 * @param empData HashMap<String, String> con los datos del empleado, la key es
+	 *                la columna
+	 * @return Employee con los datos del empleado
+	 * @throws SiaException
+	 */
+	private static Employee createEmployee(HashMap<String, String> empData) throws SiaException {
 
-		Date empHiringDate = null;
-		int empYearSalary = -1;
-		boolean empSickLeave = false;
-		// parseamos la fecha de striong a objeto Date
+		Employee emp = null;
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		formatter.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
-		empHiringDate = formatter.parse(empData.get(DatabaseConstants.HIRING_DATE));
+		try {
+			Date empHiringDate = null;
+			int empYearSalary = -1;
+			boolean empSickLeave = false;
 
-		// Aqui formateamos el salario anual a numero entero
-		empYearSalary = Integer.parseInt(empData.get(DatabaseConstants.YEAR_SALARY));
-		// Parseamos el boleano de la baja
-		empSickLeave = Boolean.parseBoolean(empData.get(DatabaseConstants.SICK_LEAVE));
-		log.trace("Parseamos todos los datos necesarios del csv");
+			// Parseamos la fecha de String a Date
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			formatter.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
+			empHiringDate = formatter.parse(empData.get(DatabaseConstants.HIRING_DATE));
 
-		// Creamos el empleado con los datos obtenidos
-		Employee emp = new Employee(empData.get(DatabaseConstants.ID), empData.get(DatabaseConstants.NAME),
-				empData.get(DatabaseConstants.SURNAME1), empData.get(DatabaseConstants.SURNAME2),
-				empData.get(DatabaseConstants.PHONE), empData.get(DatabaseConstants.EMAIL),
-				empData.get(DatabaseConstants.JOB), empHiringDate, empYearSalary, empSickLeave);
-		log.trace(emp);
+			// Aqui formateamos el salario anual a numero entero
+			empYearSalary = Integer.parseInt(empData.get(DatabaseConstants.YEAR_SALARY));
+			// Parseamos el boleano de la baja
+			empSickLeave = Boolean.parseBoolean(empData.get(DatabaseConstants.SICK_LEAVE));
+			log.trace("Parseamos todos los datos necesarios del csv");
+
+			// Creamos el empleado con los datos obtenidos
+			emp = new Employee(empData.get(DatabaseConstants.ID), empData.get(DatabaseConstants.NAME),
+					empData.get(DatabaseConstants.SURNAME1), empData.get(DatabaseConstants.SURNAME2),
+					empData.get(DatabaseConstants.PHONE), empData.get(DatabaseConstants.EMAIL),
+					empData.get(DatabaseConstants.JOB), empHiringDate, empYearSalary, empSickLeave);
+			log.trace(emp);
+
+		} catch (NumberFormatException e) {
+			String message = "Fallo al introducir el salario anual";
+			throw new SiaException(SiaExceptionCodes.NUMBER_FORMAT, message, e);
+
+		} catch (ParseException e) {
+			String message = "Fallo al formatear la fecha de contratacion";
+			throw new SiaException(SiaExceptionCodes.PARSE_DATE, message, e);
+
+		}
+
 		return emp;
 	}
 
