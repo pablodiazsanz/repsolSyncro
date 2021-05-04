@@ -15,14 +15,14 @@ public class EmpFactory {
 			}
 			
 		case "SERVER":
-			if (PropertiesChecker.getClientElection()) {
+			if (PropertiesChecker.getServerElection()) {
 				return new EmpDb("SERVER");
 			} else {
 				return new EmpCsv("SERVER");
 			}
 			
 		case "RESULT":
-			if (PropertiesChecker.getClientElection()) {
+			if (PropertiesChecker.getResultElection()) {
 				return new EmpDb("RESULT");
 			} else {
 				return new EmpCsv("RESULT");
