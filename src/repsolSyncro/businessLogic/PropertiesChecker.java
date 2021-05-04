@@ -188,6 +188,7 @@ public class PropertiesChecker {
 			file.getProperty(PropertyConstants.DB_DRIVER);
 			file.getProperty(PropertyConstants.DB_USERNAME);
 			file.getProperty(PropertyConstants.DB_PASSWORD);
+			file.getProperty(PropertyConstants.DB_TABLE);
 			log.trace("comprobamos valores en fichero DDBB");
 			// Solo se pasa a true en caso de que pase por todos los datos del fichero
 			// properties

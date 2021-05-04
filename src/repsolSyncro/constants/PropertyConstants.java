@@ -3,13 +3,12 @@ package repsolSyncro.constants;
 /**
  * Constantes de busqueda en los valores de los ficheros properties
  *
- * Los valores se organizan de la siguiente manera 
- * FORMATO DE NOMBRES: 
- * - PATH: Si empiezan por PATH son direccion de los propios properties 
- * - DB: Si empiezan por DB son datos de un properties que apunta a una BD 
- * - CSV: si empiezan por CSV son datos de un properties que apunta a un CSV 
- * - _HEAD: si la segunda palabra despues de CSV es _HEAD el dato es el nombre
- *  que tiene la columna que equivale al valor en el CSV
+ * Los valores se organizan de la siguiente manera FORMATO DE NOMBRES: - PATH:
+ * Si empiezan por PATH son direccion de los propios properties - DB: Si
+ * empiezan por DB son datos de un properties que apunta a una BD - CSV: si
+ * empiezan por CSV son datos de un properties que apunta a un CSV - _HEAD: si
+ * la segunda palabra despues de CSV es _HEAD el dato es el nombre que tiene la
+ * columna que equivale al valor en el CSV
  */
 public class PropertyConstants {
 
@@ -29,7 +28,10 @@ public class PropertyConstants {
 	public static final String DB_USERNAME = "DEFAULT.Database.Username";
 	// Contraseña del usuario que loguea en BBDD
 	public static final String DB_PASSWORD = "DEFAULT.Database.Password";
-	
+
+	// Contraseña del usuario que loguea en BBDD
+	public static final String DB_TABLE = "DEFAULT.Database.table";
+
 	// Direccion del CSV a leer o escribir
 	public static final String CSV_PATH = "DEFAULT.File.CSV.emp";
 	public static final String CSV_HEAD_ID = "DEFAULT.File.CSV.emp.head.ID";

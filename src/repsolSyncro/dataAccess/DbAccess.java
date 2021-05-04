@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -38,11 +37,18 @@ public class DbAccess {
 
 	// Datos de conexion a la BBDD
 	// Direccion de la BBDD
-	private static String driver;
+	private String driver;
 	// Usuario que se loguea en la BBDD
-	private static String user;
+	private String user;
 	// Contraseña del usuario que se logea
-	private static String pwd;
+	private String pwd;
+
+	public DbAccess(Properties file) throws SiaException {
+		driver = file.getProperty(PropertyConstants.DB_DRIVER);
+		user = file.getProperty(PropertyConstants.DB_USERNAME);
+		pwd = file.getProperty(PropertyConstants.DB_PASSWORD);
+
+	}
 
 	/**
 	 * Comprueba que la conexion a BBDD se realiza correctamente y tambien comprueba
@@ -58,16 +64,15 @@ public class DbAccess {
 		try {
 			// Obtenemos el fichero con las propiedades.
 			file = new Properties();
-			ip = new FileInputStream(
-					PropertiesChecker.getAllProperties().getProperty(propertyPath));
+			ip = new FileInputStream(PropertiesChecker.getAllProperties().getProperty(propertyPath));
 			file.load(ip);
 
 			log.trace("Propiedades obtenidas. Cargamos las propiedades en nuestras variables estáticas.");
 
 			// Cargamos las propiedades en nuestras variables
-			driver = file.getProperty(PropertyConstants.DB_DRIVER);
-			user = file.getProperty(PropertyConstants.DB_USERNAME);
-			pwd = file.getProperty(PropertyConstants.DB_PASSWORD);
+			String driver = file.getProperty(PropertyConstants.DB_DRIVER);
+			String user = file.getProperty(PropertyConstants.DB_USERNAME);
+			String pwd = file.getProperty(PropertyConstants.DB_PASSWORD);
 
 			log.trace("Probamos la conexión con la bbdd");
 
@@ -102,7 +107,7 @@ public class DbAccess {
 	 *              la BBDD
 	 * @throws SiaException
 	 */
-	public static void executeStatement(String query) throws SiaException {
+	public void executeStatement(String query) throws SiaException {
 		try {
 			// Preparamos la conexión
 			conn = DriverManager.getConnection(file.getProperty(PropertyConstants.DB_DRIVER),
@@ -130,45 +135,45 @@ public class DbAccess {
 	 * 
 	 * @param table El nombre de la tabla de la que recogemos la informacion
 	 * @return dataList La List<HashMap<String, String>> con los datos de la tabla
-	 * @throws SiaException 
+	 * @throws SiaException
 	 */
-	public static List<HashMap<String, String>> getDataFromTable(String table) throws SiaException {
-		
+	public List<HashMap<String, String>> getDataFromTable(String table) throws SiaException {
+
 		// Creamos la List<HashMap<String, String>> para almacenar los datos
 		List<HashMap<String, String>> dataList = new ArrayList<HashMap<String, String>>();
 		try {
 			// Conectamos con la bbdd
 			conn = DriverManager.getConnection(file.getProperty(PropertyConstants.DB_DRIVER),
 					file.getProperty(PropertyConstants.DB_USERNAME), file.getProperty(PropertyConstants.DB_PASSWORD));
-			
+
 			log.trace("Conectado a la bbdd");
-			
+
 			// Preparamos la consulta a la tabla
 			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + table);
 			log.trace("Nombre de la tabla a la que vamos a hacer la consulta: " + table);
-			
+
 			// Ejecutamos la consulta
 			ResultSet rset = stmt.executeQuery();
-			
+
 			// Obtenemos el numero de columnas que tiene la tabla
 			int columnsNumber = rset.getMetaData().getColumnCount();
-			
+
 			// Recorremos las lineas de consulta y le pasamos los datos a la lisya
 			while (rset.next()) {
-				
+
 				// Creamos un HashMap para ir agregando linea a linea
 				HashMap<String, String> dataLine = new HashMap<>();
 				for (int i = 1; i <= columnsNumber; i++) {
 					dataLine.put(rset.getMetaData().getColumnName(i), rset.getString(i));
 				}
-				
+
 				log.trace(dataLine);
 				dataList.add(dataLine);
 			}
 		} catch (SQLException e) {
 			String message = "Error en la conexion a la bbdd";
 			throw new SiaException(SiaExceptionCodes.SQL_ERROR, message, e);
-			
+
 		}
 		return dataList;
 	}

@@ -1,15 +1,20 @@
 package repsolSyncro.businessLogic;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 
 import repsolSyncro.constants.DatabaseConstants;
+import repsolSyncro.constants.PropertyConstants;
 import repsolSyncro.dataAccess.DbAccess;
 import repsolSyncro.entities.EmpTransaction;
 import repsolSyncro.entities.Employee;
@@ -22,15 +27,53 @@ import repsolSyncro.exceptions.SiaExceptionCodes;
  * ejecutar operaciones a la clase DbAccess.
  *
  */
-public class EmpDb extends Emp{
+public class EmpDb extends Emp {
 
 	// Logger para poder escribir las trazas del codigo en los logs
 	private static Logger log = Logger.getLogger(EmpDb.class);
 	// Tabla sobre la que trabajamos
-	private static String table = "EMPLOYEE";
+	private static String table;
 
-	public EmpDb(String fileName) {
-		
+	private static Properties file;
+	private static FileInputStream ip;
+
+	private DbAccess db;
+
+	public EmpDb(String fileName) throws SiaException {
+		try {
+			file = new Properties();
+			if (fileName.equals("CLIENT")) {
+
+				ip = new FileInputStream(
+						PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE));
+				file.load(ip);
+
+				db = new DbAccess(file);
+
+			} else if (fileName.equals("SERVER")) {
+				ip = new FileInputStream(
+						PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE));
+				file.load(ip);
+
+				db = new DbAccess(file);
+			} else if (fileName.equals("RESULT")) {
+				ip = new FileInputStream(
+						PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE));
+				file.load(ip);
+
+				db = new DbAccess(file);
+			}
+
+			table = file.getProperty(PropertyConstants.DB_TABLE);
+		} catch (FileNotFoundException e) {
+			String message = "No se ha encontrado el fichero o este no existe";
+			throw new SiaException(SiaExceptionCodes.MISSING_FILE, message, e);
+
+		} catch (IOException e) {
+			String message = "Error de entrada o salida de datos";
+			throw new SiaException(SiaExceptionCodes.IN_OUT, message, e);
+		}
+
 	}
 
 	/**
@@ -48,7 +91,7 @@ public class EmpDb extends Emp{
 		// Aqui recuperamos los datos de la bbdd en forma de List<HashMap<String,
 		// String>>. El primer String del HashMap es el nombre de la columna y el
 		// segundo String el dato que le corresponde.
-		List<HashMap<String, String>> dataList = DbAccess.getDataFromTable(table);
+		List<HashMap<String, String>> dataList = db.getDataFromTable(table);
 		log.trace("Datos recuperados de la tabla " + table);
 
 		// Recorremos la lista de los datos de la bbdd y vamos generando los empleados y
@@ -67,8 +110,8 @@ public class EmpDb extends Emp{
 	}
 
 	/**
-	 * Metodo que crea el objeto empleado a partir de la coleccion de datos
-	 * extraida de la BBDD
+	 * Metodo que crea el objeto empleado a partir de la coleccion de datos extraida
+	 * de la BBDD
 	 * 
 	 * @param empData HashMap<String, String> con los datos del empleado, la key es
 	 *                la columna
@@ -145,13 +188,13 @@ public class EmpDb extends Emp{
 						+ empTransaction.getEmployee().isSickLeave() + ");";
 
 				log.trace("Query a ejecutar: " + query);
-				DbAccess.executeStatement(query);
+				db.executeStatement(query);
 
 			} else if (empTransaction.getStatus().equals("DELETE")) {
 				String query = "DELETE FROM employee WHERE ID = '" + empTransaction.getEmployee().getId() + "';";
 
 				log.trace("Query a ejecutar: " + query);
-				DbAccess.executeStatement(query);
+				db.executeStatement(query);
 
 			} else {
 				// Para el UPDATE, obtenemos el empleado desde otro método en el que comprobamos
@@ -159,7 +202,7 @@ public class EmpDb extends Emp{
 				String query = getUpdatedEmployee(empTransaction);
 
 				log.trace("Query a ejecutar: " + query);
-				DbAccess.executeStatement(query);
+				db.executeStatement(query);
 			}
 		}
 	}
@@ -172,7 +215,7 @@ public class EmpDb extends Emp{
 	 * @return La query UPDATE
 	 * @throws SiaException
 	 */
-	public String getUpdatedEmployee(EmpTransaction empTransaction){
+	public String getUpdatedEmployee(EmpTransaction empTransaction) {
 		// Creamos esta variable para iniciar la query que vamos a mandar.
 		String query = "UPDATE employee SET";
 
