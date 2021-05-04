@@ -51,7 +51,7 @@ public class DbAccess {
 	 * @return true si todo esta bien
 	 * @throws SiaException
 	 */
-	public static boolean tryConnection() throws SiaException {
+	public static boolean tryConnection(String propertyPath) throws SiaException {
 		// Devolvemos si esta conectado a la bbdd
 		boolean connected = true;
 
@@ -59,7 +59,7 @@ public class DbAccess {
 			// Obtenemos el fichero con las propiedades.
 			file = new Properties();
 			ip = new FileInputStream(
-					PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_SERVER_DB_PROPERTY_FILE));
+					PropertiesChecker.getAllProperties().getProperty(propertyPath));
 			file.load(ip);
 
 			log.trace("Propiedades obtenidas. Cargamos las propiedades en nuestras variables estáticas.");

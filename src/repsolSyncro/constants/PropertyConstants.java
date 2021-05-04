@@ -14,12 +14,13 @@ package repsolSyncro.constants;
 public class PropertyConstants {
 
 	// Eleccion de forma de trabajo
-	public static final String CSV_TO_DATABASE = "DEFAULT.Boolean.PROPERTIES.DB.decision";
+	public static final String CLIENT_ELECTION = "DEFAULT.Election.PROPERTIES.client";
+	public static final String SERVER_ELECTION = "DEFAULT.Election.PROPERTIES.server";
+	public static final String RESULT_ELECTION = "DEFAULT.Election.PROPERTIES.result";
 
 	// Sireccion de los fichero properties
 	public static final String PATH_CLIENT_PROPERTY_FILE = "DEFAULT.File.PROPERTIES.CSV.client";
-	public static final String PATH_SERVER_DB_PROPERTY_FILE = "DEFAULT.File.PROPERTIES.DB.server";
-	public static final String PATH_SERVER_CSV_PROPERTY_FILE = "DEFAULT.File.PROPERTIES.CSV.server";
+	public static final String PATH_SERVER_PROPERTY_FILE = "DEFAULT.File.PROPERTIES.CSV.server";
 	public static final String PATH_RESULT_PROPERTY_FILE = "DEFAULT.File.PROPERTIES.CSV.result";
 
 	// Direccion de la BBDD

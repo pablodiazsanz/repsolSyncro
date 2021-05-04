@@ -22,14 +22,15 @@ import repsolSyncro.exceptions.SiaExceptionCodes;
  * ejecutar operaciones a la clase DbAccess.
  *
  */
-public class EmpDb {
+public class EmpDb extends Emp{
 
 	// Logger para poder escribir las trazas del codigo en los logs
 	private static Logger log = Logger.getLogger(EmpDb.class);
 	// Tabla sobre la que trabajamos
 	private static String table = "EMPLOYEE";
 
-	public EmpDb() {
+	public EmpDb(String fileName) {
+		
 	}
 
 	/**
@@ -40,7 +41,7 @@ public class EmpDb {
 	 *         id por key
 	 * @throws SiaException
 	 */
-	public static HashMap<String, Employee> getMap() throws SiaException {
+	public HashMap<String, Employee> getMap() throws SiaException {
 		// Creamos el HashMap que vamos a rellenar con el id y con los empleados.
 		HashMap<String, Employee> employeeList = new HashMap<String, Employee>();
 
@@ -122,7 +123,7 @@ public class EmpDb {
 	 *                         comparacion
 	 * @throws SiaException
 	 */
-	public static void executeTransactions(List<EmpTransaction> transactionsList) throws SiaException {
+	public void executeTransactions(List<EmpTransaction> transactionsList) throws SiaException {
 
 		// Recorremos transaccion por transaccion y ejecutamos operacion por operacion.
 		for (EmpTransaction empTransaction : transactionsList) {
@@ -155,8 +156,7 @@ public class EmpDb {
 			} else {
 				// Para el UPDATE, obtenemos el empleado desde otro método en el que comprobamos
 				// los datos a modificar
-				String query = getQueryUpdatedEmployee(empTransaction.getEmployee(),
-						empTransaction.getModifiedFields());
+				String query = getUpdatedEmployee(empTransaction);
 
 				log.trace("Query a ejecutar: " + query);
 				DbAccess.executeStatement(query);
@@ -172,8 +172,7 @@ public class EmpDb {
 	 * @return La query UPDATE
 	 * @throws SiaException
 	 */
-	public static String getQueryUpdatedEmployee(Employee updatedEmployee, List<String> modifiedFields)
-			throws SiaException {
+	public String getUpdatedEmployee(EmpTransaction empTransaction){
 		// Creamos esta variable para iniciar la query que vamos a mandar.
 		String query = "UPDATE employee SET";
 
@@ -190,33 +189,33 @@ public class EmpDb {
 		boolean sickLeave = false;
 
 		// Recorremos la lista para saber que datos se han cambiado.
-		for (int i = 0; i < modifiedFields.size(); i++) {
+		for (int i = 0; i < empTransaction.getModifiedFields().size(); i++) {
 
-			if (modifiedFields.get(i).equals("name")) {
+			if (empTransaction.getModifiedFields().get(i).equals("name")) {
 				name = true;
 
-			} else if (modifiedFields.get(i).equals("surname1")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("surname1")) {
 				surname1 = true;
 
-			} else if (modifiedFields.get(i).equals("surname2")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("surname2")) {
 				surname2 = true;
 
-			} else if (modifiedFields.get(i).equals("phone")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("phone")) {
 				phone = true;
 
-			} else if (modifiedFields.get(i).equals("email")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("email")) {
 				email = true;
 
-			} else if (modifiedFields.get(i).equals("job")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("job")) {
 				job = true;
 
-			} else if (modifiedFields.get(i).equals("hiringDate")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("hiringDate")) {
 				hiringDate = true;
 
-			} else if (modifiedFields.get(i).equals("yearSalary")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("yearSalary")) {
 				yearSalary = true;
 
-			} else if (modifiedFields.get(i).equals("sickLeave")) {
+			} else if (empTransaction.getModifiedFields().get(i).equals("sickLeave")) {
 				sickLeave = true;
 			}
 
@@ -225,38 +224,38 @@ public class EmpDb {
 		// Si los datos han sido cambiados, establecemos el dato para añadirlo a la
 		// query.
 		if (name) {
-			query += " name = '" + updatedEmployee.getName() + "',";
+			query += " name = '" + empTransaction.getEmployee().getName() + "',";
 		}
 		if (surname1) {
-			query += " first_surname = '" + updatedEmployee.getSurname1() + "',";
+			query += " first_surname = '" + empTransaction.getEmployee().getSurname1() + "',";
 		}
 		if (surname2) {
-			query += " second_surname = '" + updatedEmployee.getSurname2() + "',";
+			query += " second_surname = '" + empTransaction.getEmployee().getSurname2() + "',";
 		}
 		if (phone) {
-			query += " phone = '" + updatedEmployee.getTlf() + "',";
+			query += " phone = '" + empTransaction.getEmployee().getTlf() + "',";
 		}
 		if (email) {
-			query += " email = '" + updatedEmployee.getMail() + "',";
+			query += " email = '" + empTransaction.getEmployee().getMail() + "',";
 		}
 		if (job) {
-			query += " job = '" + updatedEmployee.getJob() + "',";
+			query += " job = '" + empTransaction.getEmployee().getJob() + "',";
 		}
 		if (hiringDate) {
 			query += " hiring_date = parsedatetime('"
-					+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(updatedEmployee.getHiringDate())
+					+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(empTransaction.getEmployee().getHiringDate())
 					+ "', 'dd/MM/yyyy HH:mm:ss'),";
 		}
 		if (yearSalary) {
-			query += " year_salary = '" + updatedEmployee.getYearSalary() + "',";
+			query += " year_salary = '" + empTransaction.getEmployee().getYearSalary() + "',";
 		}
 		if (sickLeave) {
-			query += " sick_leave = '" + updatedEmployee.isSickLeave() + "',";
+			query += " sick_leave = '" + empTransaction.getEmployee().isSickLeave() + "',";
 		}
 
 		// Completamos la query y se la devolvemos para ejecutarla en la base de datos.
 		query = query.substring(0, query.length() - 1);
-		query += " WHERE ID = '" + updatedEmployee.getId() + "';";
+		query += " WHERE ID = '" + empTransaction.getEmployee().getId() + "';";
 
 		return query;
 	}

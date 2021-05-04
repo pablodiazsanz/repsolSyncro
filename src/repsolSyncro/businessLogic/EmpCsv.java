@@ -26,7 +26,7 @@ import repsolSyncro.exceptions.SiaExceptionCodes;
  * forma de HashMap
  * 
  */
-public class EmpCsv {
+public class EmpCsv extends Emp{
 
 	// Logger para poder escribir las trazas del codigo en los logs
 	private Logger log = Logger.getLogger(EmpCsv.class);
@@ -72,7 +72,7 @@ public class EmpCsv {
 		if (fileName.toLowerCase().equals("client")) {
 			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE);
 		} else if (fileName.toLowerCase().equals("server")) {
-			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_SERVER_CSV_PROPERTY_FILE);
+			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_SERVER_PROPERTY_FILE);
 		} else if (fileName.toLowerCase().equals("result")) {
 			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_RESULT_PROPERTY_FILE);
 		}
@@ -221,7 +221,7 @@ public class EmpCsv {
 	 *                         ejecutar
 	 * @throws SiaException
 	 */
-	public void generateTransactionsCsv(List<EmpTransaction> transactionsList) throws SiaException {
+	public void executeTransactions(List<EmpTransaction> transactionsList) throws SiaException {
 		// Creamos el nuevo csv
 		createEmpCsv();
 		log.trace("Creamos o sobreescribimos un fichero CSV");
@@ -235,7 +235,7 @@ public class EmpCsv {
 
 			} else {
 				// Al modificar solo ecribimos los datos a cambiar
-				String line = updatedEmployeeToCsv(empTransaction);
+				String line = getUpdatedEmployee(empTransaction);
 				CsvAccess.writeCSV(line, path);
 
 			}
@@ -249,7 +249,7 @@ public class EmpCsv {
 	 * @param empTransaction Transaccion de modificacion.
 	 * @return Linea obtenida de la conversión de la transaccion del empleado.
 	 */
-	private String updatedEmployeeToCsv(EmpTransaction empTransaction) {
+	public String getUpdatedEmployee(EmpTransaction empTransaction) {
 
 		// Creamos la linea que vamos a devolver y a la que le iremos añadiendo la
 		// modificacion
