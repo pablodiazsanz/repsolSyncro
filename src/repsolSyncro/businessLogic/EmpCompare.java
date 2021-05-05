@@ -84,10 +84,14 @@ public class EmpCompare {
 					if (serverData.get(i) == null) {
 						serverData.remove(i);
 					}
-					log.debug("Creando al empleado: " + clientData.get(i).toString());
+					if (isTlfCorrect(clientData.get(i).getTlf())) {
+						log.debug("Creando al empleado: " + clientData.get(i).toString());
 
-					empTransaction = new EmpTransaction("CREATE", clientData.get(i));
-					transactionList.add(empTransaction);
+						empTransaction = new EmpTransaction("CREATE", clientData.get(i));
+						transactionList.add(empTransaction);
+					} else {
+						log.info("telefono incorrecto no creamos usuario");
+					}
 				}
 			}
 		}
@@ -104,6 +108,22 @@ public class EmpCompare {
 		}
 
 		return transactionList;
+	}
+
+	private static boolean isTlfCorrect(String tlf) {
+		boolean correct = true;
+		// comprobamos longitud de los telefonos con prefijo, españa, francia, alemania
+		// o portugal = 12
+		if (tlf.length() != 12) {
+			correct = false;
+			log.info("telefono no insertado longitud erronea");
+		}
+		if (!tlf.substring(0, 3).equals("+34") || !tlf.substring(0, 3).equals("+49")
+				|| !tlf.substring(0, 3).equals("+33") || !tlf.substring(0, 4).equals("+351")) {
+			correct = false;
+			log.info("telefono no insertado fallo en prefijo");
+		}
+		return correct;
 	}
 
 	/**
@@ -146,7 +166,7 @@ public class EmpCompare {
 					+ clientEmployee.getSurname2() + "}");
 			modifiedFields.add("surname2");
 		}
-		if (!clientEmployee.getTlf().equalsIgnoreCase(serverEmployee.getTlf())) {
+		if (!clientEmployee.getTlf().equalsIgnoreCase(serverEmployee.getTlf()) && isTlfCorrect(clientEmployee.getTlf())) {
 			clientEmployee.setTlf(clientEmployee.getTlf());
 			log.debug("el empleado [" + clientEmployee.getId() + "] cambia el (telefono) a: {" + clientEmployee.getTlf()
 					+ "}");
@@ -183,7 +203,8 @@ public class EmpCompare {
 			modifiedFields.add("sickLeave");
 		}
 
-		// Creamos la transaccion de empleado y se la devolvemos con la lista de campos modificados.
+		// Creamos la transaccion de empleado y se la devolvemos con la lista de campos
+		// modificados.
 		EmpTransaction empTransaction = new EmpTransaction("UPDATE", clientEmployee, modifiedFields);
 		return empTransaction;
 	}
