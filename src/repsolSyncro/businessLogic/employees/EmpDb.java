@@ -1,4 +1,4 @@
-package repsolSyncro.businessLogic;
+package repsolSyncro.businessLogic.employees;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,13 +13,15 @@ import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 
+import repsolSyncro.businessLogic.ObjectTool;
+import repsolSyncro.businessLogic.PropertiesChecker;
 import repsolSyncro.constants.DatabaseConstants;
 import repsolSyncro.constants.PropertyConstants;
 import repsolSyncro.dataAccess.DbAccess;
-import repsolSyncro.entities.EmpTransaction;
-import repsolSyncro.entities.Employee;
 import repsolSyncro.entities.MyObject;
 import repsolSyncro.entities.Transaction;
+import repsolSyncro.entities.employees.EmpTransaction;
+import repsolSyncro.entities.employees.Employee;
 import repsolSyncro.exceptions.SiaException;
 import repsolSyncro.exceptions.SiaExceptionCodes;
 
@@ -29,7 +31,7 @@ import repsolSyncro.exceptions.SiaExceptionCodes;
  * ejecutar operaciones a la clase DbAccess.
  *
  */
-public class EmpDb extends Emp {
+public class EmpDb implements ObjectTool {
 
 	// Logger para poder escribir las trazas del codigo en los logs
 	private static Logger log = Logger.getLogger(EmpDb.class);
@@ -40,6 +42,7 @@ public class EmpDb extends Emp {
 	private static Properties file;
 	private static FileInputStream ip;
 
+	// Objeto DbAccess
 	private DbAccess db;
 
 	public EmpDb(String fileName) throws SiaException {
@@ -211,7 +214,7 @@ public class EmpDb extends Emp {
 			} else {
 				// Para el UPDATE, obtenemos el empleado desde otro método en el que comprobamos
 				// los datos a modificar
-				String query = "UPDATE " + table + " SET" + getUpdatedEmployee(empTransaction);
+				String query = "UPDATE " + table + " SET" + getUpdatedObject(empTransaction);
 
 				log.trace("Query a ejecutar: " + query);
 				db.executeStatement(query);
@@ -227,7 +230,7 @@ public class EmpDb extends Emp {
 	 * @return La query UPDATE
 	 * @throws SiaException
 	 */
-	public String getUpdatedEmployee(Transaction transaction) {
+	public String getUpdatedObject(Transaction transaction) {
 		EmpTransaction empTransaction = (EmpTransaction) transaction;
 		// Creamos esta variable para iniciar la query que vamos a mandar.
 		String query = "";

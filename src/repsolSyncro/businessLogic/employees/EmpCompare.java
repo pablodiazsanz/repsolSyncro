@@ -1,4 +1,4 @@
-package repsolSyncro.businessLogic;
+package repsolSyncro.businessLogic.employees;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,10 +6,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import repsolSyncro.entities.EmpTransaction;
-import repsolSyncro.entities.Employee;
+import repsolSyncro.businessLogic.Compare;
 import repsolSyncro.entities.MyObject;
 import repsolSyncro.entities.Transaction;
+import repsolSyncro.entities.employees.EmpTransaction;
+import repsolSyncro.entities.employees.Employee;
 
 /**
  * Esta clase sirve para comparar listas de empleados y devolver una lista de
@@ -29,7 +30,7 @@ public class EmpCompare implements Compare {
 	 * @param serverData El HashMap con los datos del cliente
 	 * @return Una lista de las transacciones de empleados que vamos a hacer
 	 */
-	public  List<Transaction> getTransactions(HashMap<String, MyObject> clientData,
+	public List<Transaction> getTransactions(HashMap<String, MyObject> clientData,
 			HashMap<String, MyObject> serverData) {
 
 		log.trace("Empezamos la comparacion de usuarios");
@@ -44,7 +45,7 @@ public class EmpCompare implements Compare {
 
 			// Aqui comprobamos si el valor de un empleado es nulo para no compararlo y no
 			// hacer ninguna operación. Lo eliminamos para que no opere.
-			if (clientData.get(i) == null) {
+			if ((Employee) clientData.get(i) == null) {
 				serverData.remove(i);
 
 			} else {
@@ -57,7 +58,7 @@ public class EmpCompare implements Compare {
 				 * saber los que hay que borrar.
 				 */
 
-				if (serverData.containsKey(i) && serverData.get(i) != null) {
+				if (serverData.containsKey(i) && (Employee) serverData.get(i) != null) {
 
 					// Utilizamos el método compareTo de la clase empleado que se ha implementado
 					// para saber si hay algun dato modificado
@@ -73,7 +74,7 @@ public class EmpCompare implements Compare {
 								+ serverData.get(i).toString());
 
 					} else {
-						log.debug("El empleado con identificador " +((Employee) clientData.get(i)).getId()
+						log.debug("El empleado con identificador " + ((Employee) clientData.get(i)).getId()
 								+ " no se cambia, se mantiene igual");
 
 					}
@@ -83,13 +84,13 @@ public class EmpCompare implements Compare {
 				} else {
 					// Aquí, si no se ha modificado, como el empleado no está en la lista del
 					// servidor, lo pasamos a la lista de transacciones como CREATE
-					if (serverData.get(i) == null) {
+					if ((Employee) serverData.get(i) == null) {
 						serverData.remove(i);
 					}
 					if (!isTlfCorrect(((Employee) clientData.get(i)).getTlf())) {
 						log.debug("Creando al empleado: " + clientData.get(i).toString());
 
-						empTransaction = new EmpTransaction("CREATE",(Employee) clientData.get(i));
+						empTransaction = new EmpTransaction("CREATE", (Employee) clientData.get(i));
 						transactionList.add(empTransaction);
 					} else {
 						log.info("telefono incorrecto no creamos usuario");
@@ -105,7 +106,7 @@ public class EmpCompare implements Compare {
 		for (String key : serverData.keySet()) {
 			log.debug("Eliminando al empleado: " + serverData.get(key).toString());
 
-			empTransaction = new EmpTransaction("DELETE",(Employee) serverData.get(key));
+			empTransaction = new EmpTransaction("DELETE", (Employee) serverData.get(key));
 			transactionList.add(empTransaction);
 		}
 
@@ -113,23 +114,24 @@ public class EmpCompare implements Compare {
 	}
 
 	/**
+	 * En este método comprobamos que el numero de telefono del empleado es correcto
+	 * para asi ver si crear el empleado o modificarlo
 	 * 
-	 * 
-	 * @param tlf
-	 * @return
+	 * @param tlf El telefono del empleado para comprobar
+	 * @return true si es correcto, false si es incorrecto
 	 */
 	private boolean isTlfCorrect(String tlf) {
 		boolean correct = true;
-		// comprobamos longitud de los telefonos con prefijo, españa, francia, alemania
+		// Comprobamos longitud de los telefonos con prefijo, españa, francia, alemania
 		// o portugal = 12
 		if (tlf.length() != 12) {
 			correct = false;
-			log.info("telefono no insertado longitud erronea");
+			log.info("Telefono no insertado. Longitud erronea");
 		}
-		if (tlf.substring(0, 3).equals("+34") || tlf.substring(0, 3).equals("+49")
-				|| tlf.substring(0, 3).equals("+33") || tlf.substring(0, 4).equals("+351")) {
+		if (tlf.substring(0, 3).equals("+34") || tlf.substring(0, 3).equals("+49") || tlf.substring(0, 3).equals("+33")
+				|| tlf.substring(0, 4).equals("+351")) {
 			correct = false;
-			log.info("telefono no insertado fallo en prefijo");
+			log.info("Telefono no insertado. Fallo en el prefijo");
 		}
 		return correct;
 	}
@@ -146,8 +148,11 @@ public class EmpCompare implements Compare {
 	 *         lista de campos modificados
 	 */
 	public EmpTransaction updateElement(MyObject clientObject, MyObject serverObject) {
+		// Convertimos los objetos genericos a objetos Employee
 		Employee clientEmployee = (Employee) clientObject;
 		Employee serverEmployee = (Employee) serverObject;
+
+		// Creamos la lista de campos que se modifican
 		List<String> modifiedFields = new ArrayList<String>();
 		log.trace("Lista de Strings con los datos que no se modifican creada");
 
@@ -175,6 +180,8 @@ public class EmpCompare implements Compare {
 					+ clientEmployee.getSurname2() + "}");
 			modifiedFields.add("surname2");
 		}
+		
+		// En este if tambien comprobamos el telefono para saber si actualizarlo o no
 		if (!clientEmployee.getTlf().equalsIgnoreCase(serverEmployee.getTlf())
 				&& !isTlfCorrect(clientEmployee.getTlf())) {
 			clientEmployee.setTlf(clientEmployee.getTlf());

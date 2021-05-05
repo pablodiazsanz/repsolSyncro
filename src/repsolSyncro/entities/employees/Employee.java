@@ -1,11 +1,13 @@
-package repsolSyncro.entities;
+package repsolSyncro.entities.employees;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import repsolSyncro.entities.MyObject;
+
 /**
- * Objeto empleado que gusrada los datos que nos interesas de estos
+ * Objeto empleado que guarda los datos que nos interesas de estos
  *
  */
 public class Employee implements MyObject {

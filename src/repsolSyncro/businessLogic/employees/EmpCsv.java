@@ -1,4 +1,4 @@
-package repsolSyncro.businessLogic;
+package repsolSyncro.businessLogic.employees;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,12 +13,14 @@ import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 
+import repsolSyncro.businessLogic.ObjectTool;
+import repsolSyncro.businessLogic.PropertiesChecker;
 import repsolSyncro.constants.PropertyConstants;
 import repsolSyncro.dataAccess.CsvAccess;
-import repsolSyncro.entities.EmpTransaction;
-import repsolSyncro.entities.Employee;
 import repsolSyncro.entities.MyObject;
 import repsolSyncro.entities.Transaction;
+import repsolSyncro.entities.employees.EmpTransaction;
+import repsolSyncro.entities.employees.Employee;
 import repsolSyncro.exceptions.SiaException;
 import repsolSyncro.exceptions.SiaExceptionCodes;
 
@@ -28,7 +30,7 @@ import repsolSyncro.exceptions.SiaExceptionCodes;
  * forma de HashMap
  * 
  */
-public class EmpCsv extends Emp{
+public class EmpCsv implements ObjectTool{
 
 	// Logger para poder escribir las trazas del codigo en los logs
 	private Logger log = Logger.getLogger(EmpCsv.class);
@@ -71,6 +73,7 @@ public class EmpCsv extends Emp{
 		String src = "";
 		log.trace("Accedemos al fichero de: " + fileName);
 
+		// Elegimos el fichero que cargar
 		if (fileName.toLowerCase().equals("client")) {
 			src = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PATH_CLIENT_PROPERTY_FILE);
 		} else if (fileName.toLowerCase().equals("server")) {
@@ -238,7 +241,7 @@ public class EmpCsv extends Emp{
 
 			} else {
 				// Al modificar solo ecribimos los datos a cambiar
-				String line = getUpdatedEmployee(empTransaction);
+				String line = getUpdatedObject(empTransaction);
 				CsvAccess.writeCSV(line, path);
 
 			}
@@ -252,7 +255,7 @@ public class EmpCsv extends Emp{
 	 * @param empTransaction Transaccion de modificacion.
 	 * @return Linea obtenida de la conversión de la transaccion del empleado.
 	 */
-	public String getUpdatedEmployee(Transaction transaction) {
+	public String getUpdatedObject(Transaction transaction) {
 		EmpTransaction empTransaction = (EmpTransaction) transaction;
 		// Creamos la linea que vamos a devolver y a la que le iremos añadiendo la
 		// modificacion
