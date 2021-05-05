@@ -17,6 +17,8 @@ import repsolSyncro.constants.PropertyConstants;
 import repsolSyncro.dataAccess.CsvAccess;
 import repsolSyncro.entities.EmpTransaction;
 import repsolSyncro.entities.Employee;
+import repsolSyncro.entities.MyObject;
+import repsolSyncro.entities.Transaction;
 import repsolSyncro.exceptions.SiaException;
 import repsolSyncro.exceptions.SiaExceptionCodes;
 
@@ -115,9 +117,9 @@ public class EmpCsv extends Emp{
 	 * @return HashMap<String, Employee> con los empleados con su ID como Key
 	 * @throws SiaException
 	 */
-	public HashMap<String, Employee> getMap() throws SiaException {
+	public HashMap<String, MyObject> getMap() throws SiaException {
 
-		HashMap<String, Employee> hm = new HashMap<String, Employee>();
+		HashMap<String, MyObject> hm = new HashMap<String, MyObject>();
 
 		// Obtenemos la lista de los datos del csv de empleados
 		List<HashMap<String, String>> csvData = CsvAccess.getData(path);
@@ -221,14 +223,15 @@ public class EmpCsv extends Emp{
 	 *                         ejecutar
 	 * @throws SiaException
 	 */
-	public void executeTransactions(List<EmpTransaction> transactionsList) throws SiaException {
+	public void executeTransactions(List<Transaction> transactionsList) throws SiaException {
 		// Creamos el nuevo csv
 		createEmpCsv();
 		log.trace("Creamos o sobreescribimos un fichero CSV");
 
 		// Empezamos las transacciones
-		for (EmpTransaction empTransaction : transactionsList) {
+		for (Transaction transaction : transactionsList) {
 			// Si se crean o se destruyen escribimos todos los datos
+			EmpTransaction empTransaction = (EmpTransaction) transaction;
 			if (empTransaction.getStatus().equals("CREATE") || empTransaction.getStatus().equals("DELETE")) {
 				String line = empTransaction.getEmployee().toCSV() + ";" + empTransaction.getStatus();
 				CsvAccess.writeCSV(line, path);
@@ -249,8 +252,8 @@ public class EmpCsv extends Emp{
 	 * @param empTransaction Transaccion de modificacion.
 	 * @return Linea obtenida de la conversión de la transaccion del empleado.
 	 */
-	public String getUpdatedEmployee(EmpTransaction empTransaction) {
-
+	public String getUpdatedEmployee(Transaction transaction) {
+		EmpTransaction empTransaction = (EmpTransaction) transaction;
 		// Creamos la linea que vamos a devolver y a la que le iremos añadiendo la
 		// modificacion
 		String line = "";
@@ -343,4 +346,5 @@ public class EmpCsv extends Emp{
 
 		return line;
 	}
+
 }

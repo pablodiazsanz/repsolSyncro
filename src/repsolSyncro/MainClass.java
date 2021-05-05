@@ -4,15 +4,18 @@ import java.util.HashMap;
 import java.util.List;
 import org.apache.log4j.Logger;
 
+import repsolSyncro.businessLogic.Compare;
 import repsolSyncro.businessLogic.Emp;
 import repsolSyncro.businessLogic.EmpCompare;
 import repsolSyncro.businessLogic.EmpCsv;
 import repsolSyncro.businessLogic.EmpDb;
-import repsolSyncro.businessLogic.EmpFactory;
+import repsolSyncro.businessLogic.Factory;
 import repsolSyncro.businessLogic.PropertiesChecker;
 import repsolSyncro.dataAccess.DbAccess;
 import repsolSyncro.entities.EmpTransaction;
 import repsolSyncro.entities.Employee;
+import repsolSyncro.entities.MyObject;
+import repsolSyncro.entities.Transaction;
 import repsolSyncro.exceptions.SiaException;
 
 public class MainClass {
@@ -36,19 +39,20 @@ public class MainClass {
 			PropertiesChecker.checker();
 
 			// Leer los empleados de un origen
-			Emp empCliente = EmpFactory.getEmp("CLIENT");
-			HashMap<String, Employee> clientData = empCliente.getMap();
+			Emp empCliente = Factory.getEmp("CLIENT");
+			HashMap<String, MyObject> clientData = empCliente.getMap();
 
 			// Leer mis empleados
-			Emp empServer = EmpFactory.getEmp("SERVER");
-			HashMap<String, Employee> serverData = empServer.getMap();
+			Emp empServer = Factory.getEmp("SERVER");
+			HashMap<String, MyObject> serverData = empServer.getMap();
 
 			// Sincronizar ambos listados de empleados
 			// - Comparo las listas y genero un objeto de operaciones a ejecutar
-			List<EmpTransaction> transactionsList = EmpCompare.getTransactions(clientData, serverData);
+			Compare transactioner = Factory.getTransactioner();
+			List<Transaction> transactionsList = transactioner.getTransactions(clientData, serverData);
 
 			// Ejecutar las operaciones de sincronizacion
-			Emp empResult = EmpFactory.getEmp("RESULT");
+			Emp empResult = Factory.getEmp("RESULT");
 			empResult.executeTransactions(transactionsList);
 
 			log.info("Sincronización realizada correctamente");

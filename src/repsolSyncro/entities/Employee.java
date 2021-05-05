@@ -8,7 +8,7 @@ import java.util.TimeZone;
  * Objeto empleado que gusrada los datos que nos interesas de estos
  *
  */
-public class Employee implements Comparable<Employee> {
+public class Employee implements MyObject {
 	private String id, name, surname1, surname2, tlf, mail, job;
 	private Date hiringDate;
 	private int yearSalary;

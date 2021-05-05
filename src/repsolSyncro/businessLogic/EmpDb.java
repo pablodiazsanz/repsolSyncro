@@ -18,6 +18,8 @@ import repsolSyncro.constants.PropertyConstants;
 import repsolSyncro.dataAccess.DbAccess;
 import repsolSyncro.entities.EmpTransaction;
 import repsolSyncro.entities.Employee;
+import repsolSyncro.entities.MyObject;
+import repsolSyncro.entities.Transaction;
 import repsolSyncro.exceptions.SiaException;
 import repsolSyncro.exceptions.SiaExceptionCodes;
 
@@ -92,9 +94,9 @@ public class EmpDb extends Emp {
 	 *         id por key
 	 * @throws SiaException
 	 */
-	public HashMap<String, Employee> getMap() throws SiaException {
+	public HashMap<String, MyObject> getMap() throws SiaException {
 		// Creamos el HashMap que vamos a rellenar con el id y con los empleados.
-		HashMap<String, Employee> employeeList = new HashMap<String, Employee>();
+		HashMap<String, MyObject> employeeList = new HashMap<String, MyObject>();
 
 		// Aqui recuperamos los datos de la bbdd en forma de List<HashMap<String,
 		// String>>. El primer String del HashMap es el nombre de la columna y el
@@ -174,11 +176,12 @@ public class EmpDb extends Emp {
 	 *                         comparacion
 	 * @throws SiaException
 	 */
-	public void executeTransactions(List<EmpTransaction> transactionsList) throws SiaException {
+	@Override
+	public void executeTransactions(List<Transaction> transactionsList) throws SiaException {
 
 		// Recorremos transaccion por transaccion y ejecutamos operacion por operacion.
-		for (EmpTransaction empTransaction : transactionsList) {
-
+		for (Transaction transaction : transactionsList) {
+			EmpTransaction empTransaction = (EmpTransaction) transaction;
 			log.trace("Transaccion: [" + empTransaction.toString() + "]. Operacion a realizar: "
 					+ empTransaction.getStatus());
 
@@ -224,7 +227,8 @@ public class EmpDb extends Emp {
 	 * @return La query UPDATE
 	 * @throws SiaException
 	 */
-	public String getUpdatedEmployee(EmpTransaction empTransaction) {
+	public String getUpdatedEmployee(Transaction transaction) {
+		EmpTransaction empTransaction = (EmpTransaction) transaction;
 		// Creamos esta variable para iniciar la query que vamos a mandar.
 		String query = "";
 

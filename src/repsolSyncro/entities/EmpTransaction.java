@@ -2,23 +2,19 @@ package repsolSyncro.entities;
 
 import java.util.List;
 
-public class EmpTransaction {
+public class EmpTransaction extends Transaction {
 
-	private String status;
-	private Employee employee;
-	private List<String> modifiedFields;
 	
 	public EmpTransaction(String status, Employee employee) {
-		this.status = status;
-		this.employee = employee;
+		super(status, employee);
+		// TODO Auto-generated constructor stub
 	}
 	
-	public EmpTransaction(String status, Employee employee, List<String> modifiedFields) {
-		this.status = status;
-		this.employee = employee;
-		this.modifiedFields = modifiedFields;
-	}
 
+	public EmpTransaction(String status, Employee employee, List<String> modifiedFields) {
+		super(status, employee, modifiedFields);
+		// TODO Auto-generated constructor stub
+	}
 
 	public List<String> getModifiedFields() {
 		return modifiedFields;
@@ -29,15 +25,13 @@ public class EmpTransaction {
 	}
 
 	public Employee getEmployee() {
-		return employee;
+		return (Employee) myObject;
 	}
-
+	
 	@Override
 	public String toString() {
-		return "EmpTransaction [status=" + status + ", employee=" + employee + ", modifiedFields=" + modifiedFields
+		return "EmpTransaction [status=" + status + ", employee=" + (Employee) myObject + ", modifiedFields=" + modifiedFields
 				+ "]";
 	}
-	
-	
 
 }

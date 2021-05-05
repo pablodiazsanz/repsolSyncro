@@ -8,13 +8,15 @@ import org.apache.log4j.Logger;
 
 import repsolSyncro.entities.EmpTransaction;
 import repsolSyncro.entities.Employee;
+import repsolSyncro.entities.MyObject;
+import repsolSyncro.entities.Transaction;
 
 /**
  * Esta clase sirve para comparar listas de empleados y devolver una lista de
  * transacciones.
  *
  */
-public class EmpCompare {
+public class EmpCompare implements Compare {
 
 	// Logger para poder escribir las trazas del codigo en los logs
 	private static Logger log = Logger.getLogger(EmpCompare.class);
@@ -27,13 +29,13 @@ public class EmpCompare {
 	 * @param serverData El HashMap con los datos del cliente
 	 * @return Una lista de las transacciones de empleados que vamos a hacer
 	 */
-	public static List<EmpTransaction> getTransactions(HashMap<String, Employee> clientData,
-			HashMap<String, Employee> serverData) {
+	public  List<Transaction> getTransactions(HashMap<String, MyObject> clientData,
+			HashMap<String, MyObject> serverData) {
 
 		log.trace("Empezamos la comparacion de usuarios");
 
 		// Iniciamos la lista de transacciones
-		List<EmpTransaction> transactionList = new ArrayList<EmpTransaction>();
+		List<Transaction> transactionList = new ArrayList<Transaction>();
 		EmpTransaction empTransaction;
 
 		// En este bucle vamos a recorrer todos los empleados de cliente para
@@ -59,19 +61,19 @@ public class EmpCompare {
 
 					// Utilizamos el método compareTo de la clase empleado que se ha implementado
 					// para saber si hay algun dato modificado
-					if (clientData.get(i).compareTo(serverData.get(i)) == 1) {
+					if (clientData.get(i).compareTo((Employee) serverData.get(i)) == 1) {
 
 						log.trace("Entramos en el método updateEmployee para actualizar al empleado ["
-								+ clientData.get(i).getId() + "]");
+								+ ((Employee) clientData.get(i)).getId() + "]");
 
-						empTransaction = updateEmployee(clientData.get(i), serverData.get(i));
+						empTransaction = (EmpTransaction) updateElement(clientData.get(i), serverData.get(i));
 						transactionList.add(empTransaction);
 
 						log.debug("Modificando al empleado: " + clientData.get(i).toString() + "\n Datos anteriores: "
 								+ serverData.get(i).toString());
 
 					} else {
-						log.debug("El empleado con identificador " + clientData.get(i).getId()
+						log.debug("El empleado con identificador " +((Employee) clientData.get(i)).getId()
 								+ " no se cambia, se mantiene igual");
 
 					}
@@ -84,10 +86,10 @@ public class EmpCompare {
 					if (serverData.get(i) == null) {
 						serverData.remove(i);
 					}
-					if (isTlfCorrect(clientData.get(i).getTlf())) {
+					if (isTlfCorrect(((Employee) clientData.get(i)).getTlf())) {
 						log.debug("Creando al empleado: " + clientData.get(i).toString());
 
-						empTransaction = new EmpTransaction("CREATE", clientData.get(i));
+						empTransaction = new EmpTransaction("CREATE",(Employee) clientData.get(i));
 						transactionList.add(empTransaction);
 					} else {
 						log.info("telefono incorrecto no creamos usuario");
@@ -103,14 +105,20 @@ public class EmpCompare {
 		for (String key : serverData.keySet()) {
 			log.debug("Eliminando al empleado: " + serverData.get(key).toString());
 
-			empTransaction = new EmpTransaction("DELETE", serverData.get(key));
+			empTransaction = new EmpTransaction("DELETE",(Employee) serverData.get(key));
 			transactionList.add(empTransaction);
 		}
 
 		return transactionList;
 	}
 
-	private static boolean isTlfCorrect(String tlf) {
+	/**
+	 * 
+	 * 
+	 * @param tlf
+	 * @return
+	 */
+	private boolean isTlfCorrect(String tlf) {
 		boolean correct = true;
 		// comprobamos longitud de los telefonos con prefijo, españa, francia, alemania
 		// o portugal = 12
@@ -137,8 +145,9 @@ public class EmpCompare {
 	 * @return La transaccion del empleado con el empleado, el estado (UPDATE) y la
 	 *         lista de campos modificados
 	 */
-	private static EmpTransaction updateEmployee(Employee clientEmployee, Employee serverEmployee) {
-
+	public EmpTransaction updateElement(MyObject clientObject, MyObject serverObject) {
+		Employee clientEmployee = (Employee) clientObject;
+		Employee serverEmployee = (Employee) serverObject;
 		List<String> modifiedFields = new ArrayList<String>();
 		log.trace("Lista de Strings con los datos que no se modifican creada");
 
@@ -166,7 +175,8 @@ public class EmpCompare {
 					+ clientEmployee.getSurname2() + "}");
 			modifiedFields.add("surname2");
 		}
-		if (!clientEmployee.getTlf().equalsIgnoreCase(serverEmployee.getTlf()) && isTlfCorrect(clientEmployee.getTlf())) {
+		if (!clientEmployee.getTlf().equalsIgnoreCase(serverEmployee.getTlf())
+				&& isTlfCorrect(clientEmployee.getTlf())) {
 			clientEmployee.setTlf(clientEmployee.getTlf());
 			log.debug("el empleado [" + clientEmployee.getId() + "] cambia el (telefono) a: {" + clientEmployee.getTlf()
 					+ "}");

@@ -6,7 +6,7 @@ import repsolSyncro.exceptions.SiaException;
  * Factoria de objetos Emp que decide si trabajan con Base de Datos o csv
  *
  */
-public class EmpFactory {
+public class Factory {
 	/**
 	 * Devuelve el objeto emp que apunta al tipo de origen que corresponde de los
 	 * properties
@@ -44,5 +44,10 @@ public class EmpFactory {
 		}
 
 		return null;
+	}
+
+	public static Compare getTransactioner() {
+		
+		return new EmpCompare();
 	}
 }
