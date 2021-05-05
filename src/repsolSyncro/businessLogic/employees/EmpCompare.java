@@ -7,6 +7,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import repsolSyncro.businessLogic.Compare;
+import repsolSyncro.businessLogic.PropertiesChecker;
+import repsolSyncro.constants.PropertyConstants;
 import repsolSyncro.entities.MyObject;
 import repsolSyncro.entities.Transaction;
 import repsolSyncro.entities.employees.EmpTransaction;
@@ -122,17 +124,25 @@ public class EmpCompare implements Compare {
 	 */
 	private boolean isTlfCorrect(String tlf) {
 		boolean correct = true;
+		String[] prefixes = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PREFIXES).split(";");
 		// Comprobamos longitud de los telefonos con prefijo, españa, francia, alemania
 		// o portugal = 12
 		if (tlf.length() != 12) {
 			correct = false;
 			log.info("Telefono no insertado. Longitud erronea");
 		}
+		for (int i = 0; i < prefixes.length; i++) {
+			if(tlf.substring(0,prefixes[i].length()).equals(prefixes[i])){
+				correct = false;
+				log.info("Telefono no insertado. Fallo en el prefijo");
+			}
+		}
+		/*
 		if (tlf.substring(0, 3).equals("+34") || tlf.substring(0, 3).equals("+49") || tlf.substring(0, 3).equals("+33")
 				|| tlf.substring(0, 4).equals("+351")) {
 			correct = false;
 			log.info("Telefono no insertado. Fallo en el prefijo");
-		}
+		}*/
 		return correct;
 	}
 

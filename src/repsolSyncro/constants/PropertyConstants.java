@@ -11,6 +11,9 @@ package repsolSyncro.constants;
  * columna que equivale al valor en el CSV
  */
 public class PropertyConstants {
+	
+	// Prefijos telefonicos aceptados
+	public static final String PREFIXES = "DEFAULT.Object.PROPERTIES.prefix";
 
 	// Eleccion de forma de trabajo
 	public static final String CLIENT_ELECTION = "DEFAULT.Election.PROPERTIES.client";

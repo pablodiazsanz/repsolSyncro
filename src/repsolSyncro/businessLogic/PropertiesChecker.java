@@ -18,8 +18,8 @@ public class PropertiesChecker {
 	private static Logger log = Logger.getLogger(PropertiesChecker.class);
 
 	// Ruta al fichero con todos los properties
-	private static String PropertiesPath = "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
-	//private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
+	//private static String PropertiesPath = "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
+	private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
 	private static boolean clientElection;
 	private static boolean serverElection;
 	private static boolean resultElection;
@@ -61,7 +61,10 @@ public class PropertiesChecker {
 		clientElection = Boolean.parseBoolean(allProperties.getProperty(PropertyConstants.CLIENT_ELECTION));
 		serverElection = Boolean.parseBoolean(allProperties.getProperty(PropertyConstants.SERVER_ELECTION));
 		resultElection = Boolean.parseBoolean(allProperties.getProperty(PropertyConstants.RESULT_ELECTION));
-
+		
+		//SECCION PARA COMPROBAR OBJETOS
+		allProperties.getProperty(PropertyConstants.PREFIXES);
+		
 		log.trace("Elegimos como trabajamos");
 		// Comprobamos las properties de cada origen dependiendo de como se trabajen
 		// si alguno falla saltaria una excepcion y nunca llegaria al return por lo que
