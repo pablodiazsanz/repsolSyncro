@@ -124,6 +124,7 @@ public class EmpCompare implements Compare {
 	 */
 	private boolean isTlfCorrect(String tlf) {
 		boolean correct = true;
+		// Obtenemos array del propertriesRoutes de los prefijos telefonicos aceptados
 		String[] prefixes = PropertiesChecker.getAllProperties().getProperty(PropertyConstants.PREFIXES).split(";");
 		// Comprobamos longitud de los telefonos con prefijo, españa, francia, alemania
 		// o portugal = 12
@@ -131,18 +132,13 @@ public class EmpCompare implements Compare {
 			correct = false;
 			log.info("Telefono no insertado. Longitud erronea");
 		}
+		// Recorremos el array para comprobar cada prefijo introducido
 		for (int i = 0; i < prefixes.length; i++) {
 			if(tlf.substring(0,prefixes[i].length()).equals(prefixes[i])){
 				correct = false;
 				log.info("Telefono no insertado. Fallo en el prefijo");
 			}
 		}
-		/*
-		if (tlf.substring(0, 3).equals("+34") || tlf.substring(0, 3).equals("+49") || tlf.substring(0, 3).equals("+33")
-				|| tlf.substring(0, 4).equals("+351")) {
-			correct = false;
-			log.info("Telefono no insertado. Fallo en el prefijo");
-		}*/
 		return correct;
 	}
 

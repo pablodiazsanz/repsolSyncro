@@ -8,14 +8,8 @@ import repsolSyncro.businessLogic.Compare;
 import repsolSyncro.businessLogic.ObjectTool;
 import repsolSyncro.businessLogic.Factory;
 import repsolSyncro.businessLogic.PropertiesChecker;
-import repsolSyncro.businessLogic.employees.EmpCompare;
-import repsolSyncro.businessLogic.employees.EmpCsv;
-import repsolSyncro.businessLogic.employees.EmpDb;
-import repsolSyncro.dataAccess.DbAccess;
 import repsolSyncro.entities.MyObject;
 import repsolSyncro.entities.Transaction;
-import repsolSyncro.entities.employees.EmpTransaction;
-import repsolSyncro.entities.employees.Employee;
 import repsolSyncro.exceptions.SiaException;
 
 public class MainClass {
