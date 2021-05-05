@@ -126,8 +126,8 @@ public class EmpCompare implements Compare {
 			correct = false;
 			log.info("telefono no insertado longitud erronea");
 		}
-		if (!tlf.substring(0, 3).equals("+34") || !tlf.substring(0, 3).equals("+49")
-				|| !tlf.substring(0, 3).equals("+33") || !tlf.substring(0, 4).equals("+351")) {
+		if (tlf.substring(0, 3).equals("+34") || tlf.substring(0, 3).equals("+49")
+				|| tlf.substring(0, 3).equals("+33") || tlf.substring(0, 4).equals("+351")) {
 			correct = false;
 			log.info("telefono no insertado fallo en prefijo");
 		}
