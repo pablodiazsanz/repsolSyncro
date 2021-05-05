@@ -86,7 +86,7 @@ public class EmpCompare implements Compare {
 					if (serverData.get(i) == null) {
 						serverData.remove(i);
 					}
-					if (isTlfCorrect(((Employee) clientData.get(i)).getTlf())) {
+					if (!isTlfCorrect(((Employee) clientData.get(i)).getTlf())) {
 						log.debug("Creando al empleado: " + clientData.get(i).toString());
 
 						empTransaction = new EmpTransaction("CREATE",(Employee) clientData.get(i));
@@ -176,7 +176,7 @@ public class EmpCompare implements Compare {
 			modifiedFields.add("surname2");
 		}
 		if (!clientEmployee.getTlf().equalsIgnoreCase(serverEmployee.getTlf())
-				&& isTlfCorrect(clientEmployee.getTlf())) {
+				&& !isTlfCorrect(clientEmployee.getTlf())) {
 			clientEmployee.setTlf(clientEmployee.getTlf());
 			log.debug("el empleado [" + clientEmployee.getId() + "] cambia el (telefono) a: {" + clientEmployee.getTlf()
 					+ "}");

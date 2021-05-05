@@ -18,9 +18,8 @@ public class PropertiesChecker {
 	private static Logger log = Logger.getLogger(PropertiesChecker.class);
 
 	// Ruta al fichero con todos los properties
-	private static String PropertiesPath = "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
-	//private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
-
+	//private static String PropertiesPath = "C:\\Users\\pdiazs\\eclipse-workspace\\repsolSyncro\\src\\propertiesRoutes.properties";
+	private static String PropertiesPath = "C:\\Users\\mparrap\\git\\repsolSyncro\\src\\propertiesRoutes.properties";
 	private static boolean clientElection;
 	private static boolean serverElection;
 	private static boolean resultElection;
